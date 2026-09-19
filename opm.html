@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPM — Projekt deines Lebens</title>
+<meta name="description" content="Projekt deines Lebens.">
+<style>
+  :root{
+    --mitternacht:#0b0f16;
+    --papier:#f7f6f2;
+    --schwarz:#0a0a0a;
+    --linie:rgba(247,246,242,.14);
+    --linie-stark:rgba(247,246,242,.30);
+    --leise:rgba(247,246,242,.52);
+    --flaeche:rgba(247,246,242,.035);
+    --violett:#9d4eff;      /* 500 — Flächen, Linien, Display */
+    --violett-hell:#c49bff; /* 300 — Text auf Dunkel */
+  }
+  *{box-sizing:border-box;border-radius:0;}
+  html,body{margin:0;padding:0;overflow-x:hidden;}
+  body{
+    background:var(--mitternacht);color:var(--papier);
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;
+  }
+  .wrap{max-width:32rem;margin:0 auto;padding:2.6rem 1.4rem 3rem;}
+  button{font-family:inherit;cursor:pointer;}
+  a{color:inherit;}
+
+  .kopf{display:flex;align-items:center;gap:.95rem;margin:0 0 2.6rem;}
+  .marke{
+    width:3.4rem;height:3.4rem;flex:none;display:grid;place-items:center;
+    border:1px solid var(--violett);color:var(--violett-hell);
+    font-size:.72rem;font-weight:700;letter-spacing:-.02em;
+  }
+  .kopf-txt{min-width:0;}
+  .kopf-name{display:block;font-size:.93rem;font-weight:600;letter-spacing:-.015em;line-height:1.2;}
+  .kopf-rollen{
+    display:block;text-transform:uppercase;font-size:.56rem;font-weight:400;
+    letter-spacing:.24em;color:var(--leise);margin-top:.3rem;
+  }
+
+  h1{
+    font-weight:800;font-size:clamp(2rem,9.1vw,3.35rem);line-height:.95;
+    letter-spacing:-.05em;margin:0 0 1.15rem;overflow-wrap:break-word;
+  }
+  .lead{
+    font-size:clamp(1.08rem,4.6vw,1.32rem);font-weight:300;line-height:1.35;
+    letter-spacing:-.02em;color:var(--papier);margin:0 0 2.4rem;
+  }
+  .lead b{font-weight:600;}
+
+  .gruppe{
+    text-transform:uppercase;font-size:.57rem;font-weight:500;
+    letter-spacing:.28em;color:var(--leise);margin:2.6rem 0 .8rem;
+  }
+  p{font-size:1rem;font-weight:300;line-height:1.6;
+    color:rgba(247,246,242,.82);margin:0 0 1rem;}
+  p b{color:var(--papier);font-weight:600;}
+  p:last-child{margin-bottom:0;}
+
+  .zitat{border-left:1px solid var(--violett);padding:.1rem 0 .1rem 1.15rem;margin:1.8rem 0;}
+  .zitat p{font-size:1.12rem;font-weight:400;color:var(--papier);margin:0;
+           line-height:1.42;letter-spacing:-.015em;}
+
+  /* Warteliste */
+  .liste-kasten{
+    background:var(--schwarz);border:1px solid var(--violett);
+    padding:1.35rem 1.25rem 1.3rem;margin:1.6rem 0 0;
+  }
+  .lk-kick{
+    display:block;text-transform:uppercase;font-size:.56rem;font-weight:500;
+    letter-spacing:.26em;color:var(--violett-hell);margin-bottom:.6rem;
+  }
+  .lk-titel{font-size:1.3rem;font-weight:700;letter-spacing:-.03em;margin:0 0 .7rem;line-height:1.1;}
+  .lk-text{font-size:.93rem;font-weight:300;color:rgba(247,246,242,.78);margin:0 0 1.15rem;}
+  .feld{display:flex;flex-direction:column;gap:.55rem;}
+  .feld input[type=email]{
+    width:100%;background:transparent;color:var(--papier);
+    border:1px solid var(--linie-stark);padding:.86rem .9rem;
+    font-family:inherit;font-size:1rem;font-weight:300;
+  }
+  .feld input[type=email]::placeholder{color:rgba(247,246,242,.38);}
+  .feld input[type=email]:focus{outline:none;border-color:var(--violett);}
+  .feld button{
+    display:flex;align-items:center;justify-content:space-between;gap:1rem;
+    width:100%;text-align:left;background:transparent;color:var(--papier);
+    border:1px solid var(--violett);padding:.92rem 1rem;
+    font-size:1rem;font-weight:600;letter-spacing:-.015em;
+    transition:background-color .18s ease;
+  }
+  .feld button:hover,.feld button:focus-visible{
+    background:rgba(157,78,255,.16);outline:none;
+  }
+  .feld button span:last-child{font-weight:400;opacity:.6;}
+  .klein{font-size:.74rem;font-weight:300;color:var(--leise);margin:.85rem 0 0;line-height:1.45;}
+  .klein a{color:inherit;}
+
+  .offen{border:1px dashed var(--violett);padding:1.05rem 1.1rem;margin:1.6rem 0;}
+  .offen p{font-size:.88rem;color:rgba(247,246,242,.7);margin:0;}
+  .offen .mk{
+    display:block;text-transform:uppercase;font-size:.55rem;font-weight:500;
+    letter-spacing:.24em;color:var(--violett-hell);margin-bottom:.55rem;
+  }
+
+  .fuss{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--linie);}
+  .claim{text-transform:uppercase;font-size:.61rem;font-weight:400;
+         letter-spacing:.26em;color:var(--papier);margin:0 0 .7rem;}
+  .recht{font-size:.56rem;font-weight:400;letter-spacing:.16em;
+         text-transform:uppercase;color:var(--leise);margin:0;}
+  .recht a{text-decoration:none;}
+  .recht a:hover,.recht a:focus-visible{color:var(--papier);}
+  .recht span{margin:0 .4rem;opacity:.4;}
+
+  .auf{opacity:0;transform:translateY(.45rem);animation:auf .55s cubic-bezier(.2,.7,.3,1) forwards;}
+  .d1{animation-delay:.03s}.d2{animation-delay:.09s}.d3{animation-delay:.15s}
+  .d4{animation-delay:.21s}.d5{animation-delay:.27s}
+  @keyframes auf{to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){
+    .auf{animation:none;opacity:1;transform:none;}
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <div class="kopf auf d1">
+    <span class="marke" aria-hidden="true">OPM</span>
+    <span class="kopf-txt">
+      <span class="kopf-name">ONE PROJECT ME</span>
+      <span class="kopf-rollen">Eine Community</span>
+    </span>
+  </div>
+
+  <h1 class="auf d2">Projekt deines Lebens.</h1>
+
+  <p class="lead auf d2">Du bist das einzige Projekt, das wirklich zählt — und das
+  einzige, in das du nie genug investiert hast.</p>
+
+  <div class="liste-kasten auf d3">
+    <span class="lk-kick">Noch nicht offen</span>
+    <p class="lk-titel">Trag dich auf die Liste</p>
+    <p class="lk-text">OPM startet, sobald genug Leute darauf stehen. Vorher wäre
+    es ein leerer Raum.</p>
+    <form class="feld" method="post" action="__WARTELISTE_ENDPUNKT__">
+      <input type="email" name="email" autocomplete="email" required
+             placeholder="deine@mail.de" aria-label="Deine E-Mail-Adresse">
+      <button type="submit">
+        <span>Auf die Liste</span>
+        <span aria-hidden="true">→</span>
+      </button>
+    </form>
+    <p class="klein">Kostet nichts und verpflichtet zu nichts. Du bekommst eine
+    Nachricht, wenn es losgeht — sonst nichts. Abmelden jederzeit mit einem Klick.
+    <a href="/datenschutz">Datenschutz</a></p>
+  </div>
+
+  <p class="gruppe auf d4">Was das hier ist</p>
+
+  <p>Kein Kurs, den du durcharbeitest und danach wieder allein bist. <b>Eine
+  Community</b> — Menschen, die am selben Projekt arbeiten wie du: an sich
+  selbst.</p>
+
+  <p>Es läuft monatlich. Drin sind Challenges, Live-Events und Treffen. Du
+  gehst, wann du willst.</p>
+
+  <div class="zitat">
+    <p>Eine bessere Welt fängt immer im Spiegel an.</p>
+  </div>
+
+  <p class="gruppe auf d4">Die Challenge</p>
+
+  <p><b>LOoNATIC</b> ist die Challenge in OPM. Sie ist kein Motivationsprogramm
+  und sie ist nicht für jeden — sie ist der Teil, der wehtut, in Phasen, mit
+  einem klaren Anfang und einem klaren Ende.</p>
+
+  <div class="offen">
+    <span class="mk">Hier fehlt dein Teil</span>
+    <p>Die Zahlen zu LOoNATIC — wie viele Tage, wie viele Phasen, was in jeder
+    Phase passiert. Du hattest 33 Tage in drei Phasen im Kopf, warst dir aber
+    nicht sicher. Ich schreibe hier nichts hin, was du nicht bestätigt hast.</p>
+  </div>
+
+  <p class="gruppe auf d5">Was es kostet</p>
+
+  <p>Sobald OPM läuft, kostet die Mitgliedschaft einen festen Betrag im Monat.
+  Wie hoch, steht noch nicht fest — das sage ich, bevor es losgeht, und nicht
+  erst danach.</p>
+
+  <p>Auf der Liste zu stehen kostet nichts.</p>
+
+  <div class="fuss">
+    <p class="recht"><a href="/impressum">Impressum</a><span>/</span><a href="/datenschutz">Datenschutz</a><span>/</span><a href="/agb">AGB</a></p>
+  </div>
+
+</main>
+</body>
+</html>
