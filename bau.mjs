@@ -37,7 +37,7 @@ export function bauen(quelle, { entwurf }) {
     const vorher = html;
     html = html.replace(/<div class="liste-kasten auf d3">[\s\S]*?<\/form>[\s\S]*?<\/div>/, '<p class="bald auf d3">Die Warteliste öffnet in Kürze.</p>');
     if (html === vorher) throw new Error('Kasten mit Platzhalter-Formular nicht gefunden - nichts ersetzt, Bau abgebrochen');
-    html = html.replace('  /* Warteliste */\n', `  /* Warteliste: noch kein Formular (Platzhalter) - eine Zeile statt des Kastens */\n${BALD_CSS}  /* Warteliste */\n`);
+    html = html.replace('  /* Warteliste */\n', `  /* Warteliste: noch kein Formular - eine Zeile statt des Kastens */\n${BALD_CSS}  /* Warteliste */\n`);
   }
   if (!entwurf) html = html.replace(/\s*<div class="offen">[\s\S]*?<\/div>\n?/g, '\n');
   // Riegel: nie ein Formular mit Platzhalter-Adresse, nie eine Notiz in der Produktion.

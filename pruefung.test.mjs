@@ -107,6 +107,7 @@ const inhalt = (html) => sichtbar(html.slice(html.indexOf('<h1>'), html.indexOf(
 test('Rechtsseiten: kein "Entwurf", "AUSFUELLEN", "Platzhalter", "wird ergänzt" - weder sichtbar noch im Quelltext', () => {
   for (const w of ['Entwurf', 'ENTWURF', '[AUSFUELLEN]', 'Platzhalter', 'data-platzhalter', 'wird ergänzt', 'werden ergänzt']) assert.match(w, VERBOTEN_RECHT, `Positivkontrolle: ${w}`);
   for (const d of ['impressum.html', 'datenschutz.html']) assert.doesNotMatch(lies(d), VERBOTEN_RECHT, d);
+  assert.doesNotMatch(LIVE, VERBOTEN_RECHT, 'auch die ausgelieferte Startseite, samt Kommentaren');
   assert.throws(() => pruefeRechtsseite('impressum.html', '<p>E-Mail: [AUSFUELLEN]</p>'), /AUSFUELLEN/);
   assert.match(readFileSync(new URL('./bau.mjs', import.meta.url), 'utf8'), /pruefeRechtsseite\(d, readFileSync/, 'der Bau prüft jede Rechtsseite');
 });
