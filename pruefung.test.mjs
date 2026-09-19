@@ -26,8 +26,24 @@ const sichtbar = (html) => html.replace(/<style[\s\S]*?<\/style>/g, '').replace(
 const LIVE = bauen(QUELLE, { entwurf: false });
 const VORSCHAU = bauen(QUELLE, { entwurf: true });
 
-test('Quelle ist DGs opm.html, unverändert', () => {
-  assert.equal(createHash('sha256').update(readFileSync(new URL('./opm.html', import.meta.url))).digest('hex').slice(0, 20), '79a6eff74d2f48bd2767');
+// DG 19.09.2026, zweite Fassung (opm-2.html): <link rel="icon"> als eingebettetes SVG.
+// Einzige Aenderung daran, von DG angeordnet: "/agb: Es gibt aktuell keinen Vertrag und keinen
+// Verkauf. Bitte den AGB-Link vorerst aus dem Fuß entfernen [...] Er kommt zurück, wenn die
+// Mitgliedschaft kostenpflichtig wird."
+test('Quelle ist DGs opm.html (Fassung mit Favicon), nur der AGB-Link ist raus', () => {
+  const fussStelle = '<span>/</span><a href="/datenschutz">Datenschutz</a></p>'; // im Fuß, nicht im Kasten
+  assert.equal(QUELLE.split(fussStelle).length, 2, 'genau eine Fuß-Stelle');
+  const ohneAgb = QUELLE.replace(fussStelle, '<span>/</span><a href="/datenschutz">Datenschutz</a><span>/</span><a href="/agb">AGB</a></p>');
+  assert.equal(createHash('sha256').update(ohneAgb).digest('hex').slice(0, 20), 'aa442100ba46587bb8e3');
+  assert.doesNotMatch(QUELLE, /href="\/agb"/);
+});
+
+test('Favicon: eingebettetes SVG, nur Mitternacht und OPM-Violett, kein externer Verweis', () => {
+  const icon = LIVE.match(/<link rel="icon" href="data:image\/svg\+xml,([^"]+)">/);
+  assert.ok(icon, 'Favicon im <head>');
+  const svg = decodeURIComponent(icon[1]);
+  assert.deepEqual([...new Set(svg.match(/#[0-9a-f]{6}/gi))].sort(), ['#0b0f16', '#9d4eff']);
+  assert.doesNotMatch(svg, /href=|src=|url\(/);
 });
 
 test('Formular mit Platzhalter geht nie live: Kasten wird zur Zeile "Liste öffnet in Kürze"', () => {
@@ -62,10 +78,11 @@ test('Kein Programmkatalog, kein Quiz, keine Navigation "Programme"/"Test", kein
   assert.match(t, /LOoNATIC ist die Challenge in OPM/);
 });
 
-test('Fuß: nur Impressum / Datenschutz / AGB - kein HIGHERPlan, kein Claim', () => {
+test('Fuß: nur Impressum / Datenschutz - kein AGB-Link, kein HIGHERPlan, kein Claim', () => {
   const fuss = LIVE.slice(LIVE.indexOf('<div class="fuss">'));
-  assert.equal(sichtbar(fuss.replace(/<span>\/<\/span>/g, ' / ')), 'Impressum / Datenschutz / AGB');
-  for (const p of ['/impressum', '/datenschutz', '/agb']) assert.match(fuss, new RegExp(`href="${p}"`));
+  assert.equal(sichtbar(fuss.replace(/<span>\/<\/span>/g, ' / ')), 'Impressum / Datenschutz');
+  for (const p of ['/impressum', '/datenschutz']) assert.match(fuss, new RegExp(`href="${p}"`));
+  assert.doesNotMatch(LIVE, /href="\/agb"/, 'AGB-Link vorerst raus (kein Vertrag, kein Verkauf)');
   assert.doesNotMatch(LIVE, /HIGHERPlan|höheren Plan|class="claim"/i);
 });
 
