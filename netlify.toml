@@ -1,0 +1,10 @@
+# oneproject.me - gebaut aus opm.html (DGs Datei) nach dist/.
+# Der Bau ersetzt den Warteliste-Kasten durch eine Zeile, solange das Formular
+# nur einen Platzhalter als Adresse hat, und laesst Arbeitsnotizen ("Hier fehlt
+# dein Teil") ausser im Deploy-Preview weg. Siehe bau.mjs.
+[build]
+  command = "node bau.mjs"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
