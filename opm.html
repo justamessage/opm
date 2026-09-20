@@ -94,25 +94,22 @@ p{margin:0}
   mask-image:radial-gradient(ellipse 29% 50% at 72% 47%,#000 54%,transparent 100%);
 }
 .hero-film video{width:100%;height:100%;object-fit:contain;display:block}
-@media(max-width:899px){
-  /* Schmal ist rechts kein Platz mehr. Dann bekommt das Zeichen eigenen Raum
-     unter dem Text, statt hinter der Zeile zu liegen: der Kopf waechst um die
-     Hoehe des Zeichens, und das Zeichen schliesst ihn ab.
+@media(max-width:479px){
+  /* Auf dem Telefon steht das Zeichen neben dem Kopf, nicht darunter
+     (DG 20.09.2026). Es kostet dadurch keine Hoehe: der Kopf blieb mit dem
+     Zeichen unter dem Text 810 px hoch, vom naechsten Abschnitt waren 34 px
+     zu sehen - ein grauer Streifen statt eines Anreissers. Neben dem Kopf
+     sind es 646 px und 198 px, und "Du bist nicht" steht wieder im Bild.
 
-     Vorher lag es mittig hinter der Zeile ("Glimmen statt Konkurrenz"). Auf 390
-     lief es damit durch die Schlagzeile - 5813 Pixel sichtbare Ueberlappung,
-     auch bei opacity .24; schwaecher ist nicht abwesend. DG 20.09.2026: das
-     Emblem darf die Schlagzeile nirgends beruehren. Gemessen auf 390 mit dieser
-     Regel: keine Ueberlappung, 181 px Abstand zur Schlagzeile.
-
-     Der Raum unten traegt das Zeichen: Kastenhoehe (Breite x 9/16, also 49.7vw)
-     plus 40 px Luft, gedeckelt, sobald die Breite gedeckelt ist.
-     translateX(-72%) stellt das Zeichen mittig - es sitzt bei 72 % der
-     Kastenbreite, nicht in deren Mitte. */
-  #hero{padding-bottom:clamp(234px,calc(49.7vw + 40px),276px)}
+     Die Schlagzeile bleibt unangetastet und zweizeilig. Platz macht nur die
+     Kennzeile darueber (.mark); das Zeichen sitzt auf ihrer Hoehe, nicht auf
+     der Schlagzeile. Alle Masse in vw, damit das Verhaeltnis von 320 bis 479
+     dasselbe bleibt. Das Zeichen liegt bei 72 % der Kastenbreite, deshalb
+     steht der Kasten weiter rechts als das, was man sieht. */
+  .mark{padding-right:30vw}
   .hero-film{
-    top:auto;bottom:0;right:auto;left:50%;transform:translateX(-72%);
-    width:min(88.4%,420px);max-width:none;opacity:.8;
+    top:.5vw;bottom:auto;right:-6vw;left:auto;transform:none;
+    width:78vw;max-width:none;opacity:.95;
   }
 }
 @media(prefers-reduced-motion:reduce){.hero-film video{display:none}}
