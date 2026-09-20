@@ -9,6 +9,14 @@ Die Startseite ist **`opm.html`** (DGs Datei, unverändert). Netlify baut daraus
   den Bau ab. Anbindung an hp-anmeldung (Mandant `opm`) ist ein eigener Schritt.
 - **„Hier fehlt dein Teil“** (Klasse `offen`) erscheint nur in Deploy-Previews,
   nie in der Produktion.
+- **Kopffilm:** `medien/` wandert unverändert nach `dist/medien/`. Der Bau bricht
+  ab, wenn die Seite eine Datei unter `/medien/` anfordert, die dort nicht liegt.
+  Der Film läuft tonlos, in Schleife, ohne Bedienelemente; `medien/kopf.jpg` ist
+  das Standbild und trägt allein, wenn der Besucher Bewegung abgeschaltet hat.
+  Breit steht das Zeichen rechts neben der Zeile, schmal (unter 900px) bekommt es
+  eigenen Raum unter dem Text — es berührt die Schlagzeile auf keiner Breite.
+  Alles liegt im eigenen `dist/` — die Datenschutzerklärung sagt zu, dass keine
+  Inhalte von fremden Servern nachgeladen werden.
 - Prüfung: `npm test`.
 
 ## Offen: der Einwilligungstext im Formular

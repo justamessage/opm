@@ -5,6 +5,10 @@
  * Rechtsseiten: recht/impressum.html, recht/datenschutz.html -> dist/ (ohne "Entwurf",
  * "AUSFUELLEN", "Platzhalter", "wird ergaenzt" - sonst bricht der Bau ab).
  *
+ * Medien: medien/ -> dist/medien/ (Kopffilm). dist/ wird bei jedem Bau geleert,
+ * also muss der Ordner mitkopiert werden; jede im HTML genannte Datei muss es
+ * auch wirklich geben - sonst bricht der Bau ab (siehe pruefeMedien).
+ *
  * Zwei Regeln fuer die Startseite (DG 19.09.2026):
  *  - Formular: Solange die Adresse der Platzhalter ist, geht kein Formular live -
  *    der Kasten wird durch eine Zeile ersetzt, dass die Liste in Kuerze oeffnet.
@@ -12,7 +16,7 @@
  *  - Arbeitsnotizen ("Hier fehlt dein Teil", Klasse "offen") nur in Deploy-Previews
  *    und Branch-Deploys, nie in der Produktion.
  */
-import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, existsSync } from 'node:fs';
 
 /** Rechtsseiten und was auf ihnen nie stehen darf (DG 19.09.2026, harte Regel fuer beide Repos). */
 export const RECHTSSEITEN = ['impressum.html', 'datenschutz.html'];
@@ -26,6 +30,21 @@ export function pruefeRechtsseite(name, html) {
 import { fileURLToPath } from 'node:url';
 
 export const PLATZHALTER = '__WARTELISTE_ENDPUNKT__';
+
+/** Der Ordner mit dem Kopffilm und seinem Standbild. Wandert unveraendert nach dist/. */
+export const MEDIEN = 'medien';
+
+/**
+ * Jede Datei, die die Seite unter /medien/ anfordert, muss im Ordner liegen.
+ * Ein Kopf, der ins Leere laedt, zeigt ein schwarzes Loch statt eines Films -
+ * das faellt erst live auf. Also faellt es hier auf.
+ */
+export function pruefeMedien(html, hatDatei) {
+  const gefordert = [...new Set([...html.matchAll(/["'(]\/medien\/([A-Za-z0-9._-]+)/g)].map((m) => m[1]))];
+  const fehlt = gefordert.filter((d) => !hatDatei(d));
+  if (fehlt.length) throw new Error(`medien/: die Seite fordert ${fehlt.join(', ')} an - liegt nicht da, kein Bau`);
+  return gefordert;
+}
 
 export const entwurfAus = (env) => ['deploy-preview', 'branch-deploy'].includes(env.CONTEXT);
 
@@ -179,7 +198,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       }
       writeFileSync(new URL(`./dist/${d}`, import.meta.url), recht);
     }
-    console.log(`Gebaut: dist/index.html (CONTEXT=${process.env.CONTEXT || '-'}, ${entwurfAus(process.env) ? 'mit' : 'ohne'} Arbeitsnotizen)`);
+    const medien = pruefeMedien(html, (d) => existsSync(new URL(`./${MEDIEN}/${d}`, import.meta.url)));
+    if (medien.length) cpSync(new URL(`./${MEDIEN}/`, import.meta.url), new URL(`./dist/${MEDIEN}/`, import.meta.url), { recursive: true });
+    console.log(`Gebaut: dist/index.html (CONTEXT=${process.env.CONTEXT || '-'}, ${entwurfAus(process.env) ? 'mit' : 'ohne'} Arbeitsnotizen, ${medien.length} Medien)`);
   } catch (f) {
     console.error(f.message);
     process.exit(1);
