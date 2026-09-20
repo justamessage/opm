@@ -63,14 +63,46 @@ p{margin:0}
 
 /* ───────────── Hero ───────────── */
 
-#hero{padding-block:clamp(74px,14vw,152px) clamp(52px,8vw,100px);position:relative;overflow:hidden}
+#hero{padding-block:clamp(74px,14vw,152px) clamp(52px,8vw,100px);position:relative;overflow:hidden;isolation:isolate}
 #hero::after{
-  content:"";position:absolute;left:-14%;top:-48%;
+  content:"";position:absolute;left:-14%;top:-48%;z-index:1;
   width:72%;aspect-ratio:1;max-width:100%;
   background:radial-gradient(circle,rgba(157,78,255,.2),transparent 66%);
   pointer-events:none;
 }
-.hero-in{position:relative;display:flex;flex-direction:column;gap:30px}
+
+/* Kopffilm: das Zeichen, tonlos, ohne Bedienelemente, aus eigenem Haus
+   (dist/medien/, kein fremder Server). Es sagt nichts - es steht rechts neben
+   der Zeile und haelt die leere Haelfte des Kopfes.
+
+   Kein Vollbild: das Zeichen hat harte Kanten und wuerde der Schlagzeile ins
+   Wort fahren. Stattdessen ein eigener Kasten rechts, das Bild ganz darin
+   (contain, nie beschnitten), die Raender per Maske ausgefranst - so sitzt es
+   im Mitternachtsgrund, statt darauf zu kleben. Die Maske nimmt nebenbei die
+   Ecken mit, in denen die Vorlage ihr kleines Zweitzeichen traegt.
+
+   Standbild liegt als Untergrund darunter: vor dem ersten Frame und bei
+   abgeschalteter Bewegung fehlt dadurch nichts. */
+.hero-film{
+  position:absolute;z-index:0;pointer-events:none;
+  top:50%;right:2%;transform:translateY(-50%);
+  width:min(46%,700px);aspect-ratio:16/9;opacity:.92;
+  background:url("/medien/kopf.jpg") center/contain no-repeat;
+  /* Die Maske sitzt auf dem Zeichen (72%/47% des Bildes), nicht auf dem
+     Bildrand - sonst zoege der Rauch links in die Schlagzeile. */
+  -webkit-mask-image:radial-gradient(ellipse 29% 50% at 72% 47%,#000 54%,transparent 100%);
+  mask-image:radial-gradient(ellipse 29% 50% at 72% 47%,#000 54%,transparent 100%);
+}
+.hero-film video{width:100%;height:100%;object-fit:contain;display:block}
+@media(max-width:899px){
+  /* Schmal ist rechts kein Platz mehr. Dann liegt das Zeichen mittig hinter
+     der Zeile und tritt weit zurueck - Glimmen statt Konkurrenz. Der Kasten
+     rutscht nach links, damit das Zeichen selbst in der Mitte steht. */
+  .hero-film{top:36%;right:auto;left:-66%;width:160%;max-width:none;opacity:.24}
+}
+@media(prefers-reduced-motion:reduce){.hero-film video{display:none}}
+
+.hero-in{position:relative;z-index:2;display:flex;flex-direction:column;gap:30px}
 .mark{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .mark-sig{font-family:var(--fd);font-weight:800;font-size:15px;letter-spacing:.02em;color:var(--haus)}
 .mark-sub{font-weight:500;font-family:var(--fm);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint)}
@@ -374,6 +406,12 @@ footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-
 <body>
 
 <div id="hero">
+  <div class="hero-film" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="auto" poster="/medien/kopf.jpg" tabindex="-1">
+      <source src="/medien/kopf.webm" type="video/webm">
+      <source src="/medien/kopf.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="wrap hero-in">
     <div class="mark">
       <span class="mark-sig">OPM</span>

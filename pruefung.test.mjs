@@ -17,9 +17,9 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync, statSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { bauen, entwurfAus, PLATZHALTER, VERBOTEN_RECHT, pruefeRechtsseite, ohneKasten, ohneNotizen } from './bau.mjs';
+import { bauen, entwurfAus, PLATZHALTER, VERBOTEN_RECHT, pruefeRechtsseite, ohneKasten, ohneNotizen, pruefeMedien } from './bau.mjs';
 
 const QUELLE = readFileSync(new URL('./opm.html', import.meta.url), 'utf8');
 const sichtbar = (html) => html.replace(/<style[\s\S]*?<\/style>/g, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -75,9 +75,46 @@ test('Fuß: kein HIGHERPlan, kein Claim, kein AGB-Link - Ansage vom 19.09.2026',
   assert.doesNotMatch(LIVE, /HIGHERPlan|höheren Plan|class="claim"/i);
 });
 
-test('Keine fremden Ressourcen: keine Schrift, kein Bild, kein Skript von anderen Servern', () => {
-  assert.doesNotMatch(LIVE, /<(link|script|img|iframe)\b[^>]*(src|href)="https?:/i);
+test('Keine fremden Ressourcen: keine Schrift, kein Bild, kein Film, kein Skript von anderen Servern', () => {
+  assert.doesNotMatch(LIVE, /<(link|script|img|iframe|video|source|track)\b[^>]*(src|href|poster)="(https?:)?\/\//i);
   assert.doesNotMatch(LIVE, /fonts\.googleapis|fonts\.gstatic|@import/);
+  // Die Datenschutzerklaerung sagt: "Es werden keine Inhalte von fremden
+  // Servern nachgeladen." Der Kopffilm liegt deshalb im eigenen dist/.
+  assert.match(lies('datenschutz.html'), /keine Inhalte von fremden Servern nachgeladen/);
+});
+
+// ---------------------------------------------------------------------------
+// Kopffilm (DG 20.09.2026): das OPM-Zeichen als Bewegtbild im Kopf.
+// ---------------------------------------------------------------------------
+
+test('Kopffilm: tonlos, in Schleife, ohne Bedienelemente - und aus dem Weg der Tastatur', () => {
+  const tag = LIVE.match(/<video\b[^>]*>/);
+  assert.ok(tag, 'ein <video> im Kopf');
+  for (const a of ['autoplay', 'muted', 'loop', 'playsinline']) assert.match(tag[0], new RegExp(`\\b${a}\\b`), a);
+  assert.doesNotMatch(tag[0], /\bcontrols\b/, 'kein Bedienelement - der Film ist Kulisse, nicht Inhalt');
+  assert.match(tag[0], /tabindex="-1"/, 'kein Halt beim Durchtabben');
+  assert.match(LIVE, /<div class="hero-film" aria-hidden="true">/, 'Kulisse bleibt der Vorlesesoftware verborgen');
+  assert.equal((LIVE.match(/<video\b/g) || []).length, 1, 'genau einer');
+});
+
+test('Kopffilm: Standbild trägt, wenn der Film nicht läuft - Ladezeit oder abgeschaltete Bewegung', () => {
+  assert.match(LIVE, /poster="\/medien\/kopf\.jpg"/);
+  assert.match(LIVE, /\.hero-film\{[^}]*url\("\/medien\/kopf\.jpg"\)/, 'Standbild auch als Untergrund');
+  assert.match(LIVE, /@media\(prefers-reduced-motion:reduce\)\{\.hero-film video\{display:none\}\}/);
+});
+
+test('Kopffilm: jede angeforderte Datei liegt auch in medien/', () => {
+  const gefordert = pruefeMedien(LIVE, (d) => existsSync(new URL(`./medien/${d}`, import.meta.url)));
+  assert.deepEqual([...gefordert].sort(), ['kopf.jpg', 'kopf.mp4', 'kopf.webm']);
+  assert.throws(() => pruefeMedien('<video poster="/medien/gibtsnicht.jpg">', () => false), /gibtsnicht\.jpg/);
+  assert.match(readFileSync(new URL('./bau.mjs', import.meta.url), 'utf8'), /cpSync\(new URL\(`\.\/\$\{MEDIEN\}\//, 'der Bau kopiert medien/ nach dist/');
+});
+
+test('Kopffilm bleibt im Rahmen: unter 2 MB, damit der Kopf nicht am Netz hängt', () => {
+  for (const [d, grenze] of [['kopf.mp4', 2_000_000], ['kopf.webm', 1_500_000], ['kopf.jpg', 150_000]]) {
+    const gross = statSync(new URL(`./medien/${d}`, import.meta.url)).size;
+    assert.ok(gross <= grenze, `${d}: ${gross} Bytes, erlaubt sind ${grenze}`);
+  }
 });
 
 // ---------------------------------------------------------------------------
