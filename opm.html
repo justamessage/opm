@@ -94,20 +94,21 @@ p{margin:0}
   mask-image:radial-gradient(ellipse 29% 50% at 72% 47%,#000 54%,transparent 100%);
 }
 .hero-film video{width:100%;height:100%;object-fit:contain;display:block}
-/* Zwischen 900 und 1099 px streift der Rand des Zeichens den Schlusspunkt von
-   "deines Lebens.". Kein Durchlaufen, aber der Abstand faellt dort auf null,
-   waehrend er sonst zwischen 20 und 190 px liegt. Ursache: die Kastenbreite
-   haengt an Prozent der Elternbreite, die Schlagzeile an der Fensterbreite -
-   in diesem Band waechst die Zeile schneller, als der Kasten ausweicht.
+/* Bis 1199 px waechst die Schlagzeile schneller, als der Kasten ausweicht -
+   sie haengt an der Fensterbreite (9.2vw), er hing an Prozent der
+   Elternbreite. Beides auf dieselbe Einheit, dann laufen die Kurven parallel.
 
-   Nur dieses Band wird schmaler gestellt. Ein durchgaengiges Mass in vw haette
-   dasselbe erreicht, aber auch bei 1280 px vom Kasten 589 auf 435 genommen -
-   das zahlt der Kopf ueberall fuer eine Stelle, an der nichts fehlt.
-   Gemessen an der Produktion, sichtbare Tinte gegen sichtbare Tinte, bei je
-   vier Zeitpunkten des Films: 900/1000/1024 von 182/255/242 auf 0, ab 1100
-   unveraendert. */
-@media(min-width:900px) and (max-width:1099px){
-  .hero-film{width:min(40%,700px)}
+   Ab 1200 px bleibt es bei 46 %: dort ist die Zeile am Deckel (96px) und der
+   Kopf hat Platz, das Zeichen in voller Groesse zu tragen.
+
+   Der Befund dahinter, 20.09.2026: zuerst hatte ich nur 900-1099 geregelt,
+   weil ich bei 480-899 je ein einzelnes Videobild gemessen hatte. Ueber vier
+   Zeitpunkte gemessen beruehrt es dort aber durchgehend - 500/520/560/600/
+   660/700/768 mit 5/22/89/98/62/103/102 Pixeln. Ein Standbild pro Breite
+   reicht bei laufendem Film nicht. Mit 34vw: 23 bis 40 px Abstand, mit 40 %
+   nur 7 bis 13 - deshalb 34vw. */
+@media(min-width:480px) and (max-width:1199px){
+  .hero-film{width:min(34vw,700px)}
 }
 @media(max-width:479px){
   /* Auf dem Telefon steht das Zeichen neben dem Kopf, nicht darunter
@@ -122,15 +123,22 @@ p{margin:0}
      dasselbe bleibt. Das Zeichen liegt bei 72 % der Kastenbreite, deshalb
      steht der Kasten weiter rechts als das, was man sieht.
 
+     DG 20.09.2026: "ein Stueck weiter nach links und runter". Gemessen, wie
+     weit das geht, bevor das Zeichen die Kennzeile beruehrt - bei 11vw/16vw
+     beruehrt es. Genommen 5vw/7vw: Beruehrung 0 ueber alle Telefonbreiten,
+     und das Zeichen steht zum ersten Mal ganz im Bild statt an der rechten
+     Kante angeschnitten. Der Versatz kostete Luft zur Kennzeile, deren Rand
+     geht deshalb von 34vw auf 36vw.
+
      34vw/74vw statt 30vw/78vw: mit 30/78 beruehrte der Rauch die Kennzeile in
      zwei Baendern - 407-409 und 463-473 px. Beide liegen an Stellen, wo die
      Kennzeile eine Zeile verliert (Kopf 646->620 bzw. 621->604); die dann
      laengste Zeile reicht bis unter das Zeichen. Zwischen den Baendern blieb
      der Abstand einstellig. Mit 34/74 ist der kleinste gemessene Abstand
      32 px (bei 407), und der Kopf auf 390 bleibt bei 646 px. */
-  .mark{padding-right:34vw}
+  .mark{padding-right:36vw}
   .hero-film{
-    top:.5vw;bottom:auto;right:-6vw;left:auto;transform:none;
+    top:7.5vw;bottom:auto;right:-1vw;left:auto;transform:none;
     width:74vw;max-width:none;opacity:.95;
   }
 }
@@ -443,7 +451,39 @@ h1{font-size:clamp(42px,9.2vw,96px)}
 .wer-link:hover .wer-pfeil,.wer-link:focus-visible .wer-pfeil{transform:translateX(.18em)}
 .wer-link:focus-visible{outline:2px solid var(--haus);outline-offset:6px;border-radius:2px}
 
-footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-faint);font-family:var(--fm);font-size:11px;letter-spacing:.06em;display:flex;flex-wrap:wrap;gap:8px 26px}
+/* Der Fuss schliesst die Seite, wo sie aufgemacht hat: dieselbe Kennzeile
+   wie im Kopf, OPM im Hausviolett. Keine Claims, kein Hinweis auf die
+   Betreiberin - die steht im verlinkten Impressum (DG 19.09.2026).
+   Die Haarlinie laeuft von Violett nach Nichts, damit der Abschluss nicht
+   wie ein abgeschnittener Kasten wirkt. */
+footer{
+  position:relative;padding-block:46px 40px;
+  color:var(--ink-faint);font-family:var(--fm);
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  display:flex;flex-direction:column;gap:20px;
+}
+footer::before{
+  content:"";position:absolute;inset-inline:0;top:0;height:1px;
+  background:linear-gradient(90deg,var(--haus-dim),var(--line) 32%,var(--line-soft) 100%);
+}
+.fuss-mark{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.fuss-mark b{font-family:var(--fd);font-weight:800;font-size:13px;letter-spacing:.03em;color:var(--haus)}
+.fuss-recht{display:flex;flex-wrap:wrap;gap:12px 26px}
+/* Die Rechtslinks waren bisher unformatiert - der Browser malte sie blau.
+   Jetzt tragen sie die Schrift des Fusses, mit einer ruhenden Linie, die
+   beim Zeigen in Violett anspringt. */
+footer a{color:inherit;text-decoration:none;position:relative;padding-bottom:4px}
+footer a::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:currentColor;opacity:.26;
+  transition:opacity .18s ease,background-color .18s ease;
+}
+footer a:hover,footer a:focus-visible{color:var(--ink-soft)}
+footer a:hover::after,footer a:focus-visible::after{opacity:1;background:var(--haus)}
+footer a:focus-visible{outline:2px solid var(--haus);outline-offset:6px;border-radius:2px}
+@media(min-width:560px){
+  footer{flex-direction:row;align-items:baseline;justify-content:space-between;gap:14px 36px}
+}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -811,10 +851,12 @@ footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-
 
 <div class="wrap">
   <footer>
-    <span>OPM / One Project Me</span>
+    <p class="fuss-mark"><b>OPM</b> / One Project Me</p>
     <span>HIGHERPlan GmbH</span>
-    <span>Impressum</span>
-    <span>Datenschutz</span>
+    <div class="fuss-recht">
+      <span>Impressum</span>
+      <span>Datenschutz</span>
+    </div>
   </footer>
 </div>
 
