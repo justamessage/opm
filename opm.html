@@ -94,6 +94,21 @@ p{margin:0}
   mask-image:radial-gradient(ellipse 29% 50% at 72% 47%,#000 54%,transparent 100%);
 }
 .hero-film video{width:100%;height:100%;object-fit:contain;display:block}
+/* Zwischen 900 und 1099 px streift der Rand des Zeichens den Schlusspunkt von
+   "deines Lebens.". Kein Durchlaufen, aber der Abstand faellt dort auf null,
+   waehrend er sonst zwischen 20 und 190 px liegt. Ursache: die Kastenbreite
+   haengt an Prozent der Elternbreite, die Schlagzeile an der Fensterbreite -
+   in diesem Band waechst die Zeile schneller, als der Kasten ausweicht.
+
+   Nur dieses Band wird schmaler gestellt. Ein durchgaengiges Mass in vw haette
+   dasselbe erreicht, aber auch bei 1280 px vom Kasten 589 auf 435 genommen -
+   das zahlt der Kopf ueberall fuer eine Stelle, an der nichts fehlt.
+   Gemessen an der Produktion, sichtbare Tinte gegen sichtbare Tinte, bei je
+   vier Zeitpunkten des Films: 900/1000/1024 von 182/255/242 auf 0, ab 1100
+   unveraendert. */
+@media(min-width:900px) and (max-width:1099px){
+  .hero-film{width:min(40%,700px)}
+}
 @media(max-width:479px){
   /* Auf dem Telefon steht das Zeichen neben dem Kopf, nicht darunter
      (DG 20.09.2026). Es kostet dadurch keine Hoehe: der Kopf blieb mit dem
