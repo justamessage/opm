@@ -94,20 +94,21 @@ p{margin:0}
   mask-image:radial-gradient(ellipse 29% 50% at 72% 47%,#000 54%,transparent 100%);
 }
 .hero-film video{width:100%;height:100%;object-fit:contain;display:block}
-/* Zwischen 900 und 1099 px streift der Rand des Zeichens den Schlusspunkt von
-   "deines Lebens.". Kein Durchlaufen, aber der Abstand faellt dort auf null,
-   waehrend er sonst zwischen 20 und 190 px liegt. Ursache: die Kastenbreite
-   haengt an Prozent der Elternbreite, die Schlagzeile an der Fensterbreite -
-   in diesem Band waechst die Zeile schneller, als der Kasten ausweicht.
+/* Bis 1199 px waechst die Schlagzeile schneller, als der Kasten ausweicht -
+   sie haengt an der Fensterbreite (9.2vw), er hing an Prozent der
+   Elternbreite. Beides auf dieselbe Einheit, dann laufen die Kurven parallel.
 
-   Nur dieses Band wird schmaler gestellt. Ein durchgaengiges Mass in vw haette
-   dasselbe erreicht, aber auch bei 1280 px vom Kasten 589 auf 435 genommen -
-   das zahlt der Kopf ueberall fuer eine Stelle, an der nichts fehlt.
-   Gemessen an der Produktion, sichtbare Tinte gegen sichtbare Tinte, bei je
-   vier Zeitpunkten des Films: 900/1000/1024 von 182/255/242 auf 0, ab 1100
-   unveraendert. */
-@media(min-width:900px) and (max-width:1099px){
-  .hero-film{width:min(40%,700px)}
+   Ab 1200 px bleibt es bei 46 %: dort ist die Zeile am Deckel (96px) und der
+   Kopf hat Platz, das Zeichen in voller Groesse zu tragen.
+
+   Der Befund dahinter, 20.09.2026: zuerst hatte ich nur 900-1099 geregelt,
+   weil ich bei 480-899 je ein einzelnes Videobild gemessen hatte. Ueber vier
+   Zeitpunkte gemessen beruehrt es dort aber durchgehend - 500/520/560/600/
+   660/700/768 mit 5/22/89/98/62/103/102 Pixeln. Ein Standbild pro Breite
+   reicht bei laufendem Film nicht. Mit 34vw: 23 bis 40 px Abstand, mit 40 %
+   nur 7 bis 13 - deshalb 34vw. */
+@media(min-width:480px) and (max-width:1199px){
+  .hero-film{width:min(34vw,700px)}
 }
 @media(max-width:479px){
   /* Auf dem Telefon steht das Zeichen neben dem Kopf, nicht darunter
