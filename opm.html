@@ -95,10 +95,25 @@ p{margin:0}
 }
 .hero-film video{width:100%;height:100%;object-fit:contain;display:block}
 @media(max-width:899px){
-  /* Schmal ist rechts kein Platz mehr. Dann liegt das Zeichen mittig hinter
-     der Zeile und tritt weit zurueck - Glimmen statt Konkurrenz. Der Kasten
-     rutscht nach links, damit das Zeichen selbst in der Mitte steht. */
-  .hero-film{top:36%;right:auto;left:-66%;width:160%;max-width:none;opacity:.24}
+  /* Schmal ist rechts kein Platz mehr. Dann bekommt das Zeichen eigenen Raum
+     unter dem Text, statt hinter der Zeile zu liegen: der Kopf waechst um die
+     Hoehe des Zeichens, und das Zeichen schliesst ihn ab.
+
+     Vorher lag es mittig hinter der Zeile ("Glimmen statt Konkurrenz"). Auf 390
+     lief es damit durch die Schlagzeile - 5813 Pixel sichtbare Ueberlappung,
+     auch bei opacity .24; schwaecher ist nicht abwesend. DG 20.09.2026: das
+     Emblem darf die Schlagzeile nirgends beruehren. Gemessen auf 390 mit dieser
+     Regel: keine Ueberlappung, 181 px Abstand zur Schlagzeile.
+
+     Der Raum unten traegt das Zeichen: Kastenhoehe (Breite x 9/16, also 49.7vw)
+     plus 40 px Luft, gedeckelt, sobald die Breite gedeckelt ist.
+     translateX(-72%) stellt das Zeichen mittig - es sitzt bei 72 % der
+     Kastenbreite, nicht in deren Mitte. */
+  #hero{padding-bottom:clamp(234px,calc(49.7vw + 40px),276px)}
+  .hero-film{
+    top:auto;bottom:0;right:auto;left:50%;transform:translateX(-72%);
+    width:min(88.4%,420px);max-width:none;opacity:.8;
+  }
 }
 @media(prefers-reduced-motion:reduce){.hero-film video{display:none}}
 
