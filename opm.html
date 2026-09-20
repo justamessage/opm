@@ -130,6 +130,11 @@ h1{font-size:clamp(42px,9.2vw,96px)}
 }
 .hero-turn em{font-style:normal;color:var(--ink);border-bottom:2px solid var(--haus);padding-bottom:1px}
 
+/* Der Grund unter der Behauptung. Kleiner als die Wendung, groesser als der
+   Fliesstext - die Zeile darueber setzt, diese haelt. */
+.hero-grund{font-size:clamp(16px,1.9vw,18px);color:var(--ink-soft);max-width:44ch}
+.hero-grund strong{font-weight:400;color:var(--ink)}
+
 .scroll-cue{font-family:var(--fm);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);display:flex;align-items:center;gap:10px;margin-top:8px}
 .scroll-cue span{width:34px;height:1px;background:var(--line);display:block}
 
@@ -433,7 +438,8 @@ footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-
       <span class="mark-sub">One Project Me / Persönliche Entwicklung / Dennis Goldhammer</span>
     </div>
     <h1>Projekt<br>deines Lebens.</h1>
-    <p class="hero-turn">Und trotzdem hat alles andere Vorrang. <em>Nur du nicht.</em></p>
+    <p class="hero-turn">Es gibt nur einen Menschen in deinem Leben, der wichtig ist. Und dieser Mensch bist <em>du</em>.</p>
+    <p class="hero-grund">Das klingt egoistisch und ist das Gegenteil davon. <strong>Was du selbst nicht hast, kannst du niemandem geben</strong> — kein Glück, keinen Erfolg, keine Ruhe. Alles, was du für deine Leute willst, fängt bei dir an.</p>
     <div class="scroll-cue"><span></span>Weiterlesen</div>
   </div>
 </div>
