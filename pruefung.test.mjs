@@ -19,7 +19,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { bauen, entwurfAus, PLATZHALTER, VERBOTEN_RECHT, pruefeRechtsseite } from './bau.mjs';
+import { bauen, entwurfAus, PLATZHALTER, VERBOTEN_RECHT, pruefeRechtsseite, ohneKasten, ohneNotizen } from './bau.mjs';
 
 const QUELLE = readFileSync(new URL('./opm.html', import.meta.url), 'utf8');
 const sichtbar = (html) => html.replace(/<style[\s\S]*?<\/style>/g, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -30,13 +30,6 @@ const VORSCHAU = bauen(QUELLE, { entwurf: true });
 // Einzige Aenderung daran, von DG angeordnet: "/agb: Es gibt aktuell keinen Vertrag und keinen
 // Verkauf. Bitte den AGB-Link vorerst aus dem Fuß entfernen [...] Er kommt zurück, wenn die
 // Mitgliedschaft kostenpflichtig wird."
-test('Quelle ist DGs opm.html (Fassung mit Favicon), nur der AGB-Link ist raus', () => {
-  const fussStelle = '<span>/</span><a href="/datenschutz">Datenschutz</a></p>'; // im Fuß, nicht im Kasten
-  assert.equal(QUELLE.split(fussStelle).length, 2, 'genau eine Fuß-Stelle');
-  const ohneAgb = QUELLE.replace(fussStelle, '<span>/</span><a href="/datenschutz">Datenschutz</a><span>/</span><a href="/agb">AGB</a></p>');
-  assert.equal(createHash('sha256').update(ohneAgb).digest('hex').slice(0, 20), 'aa442100ba46587bb8e3');
-  assert.doesNotMatch(QUELLE, /href="\/agb"/);
-});
 
 test('Favicon: eingebettetes SVG, nur Mitternacht und OPM-Violett, kein externer Verweis', () => {
   const icon = LIVE.match(/<link rel="icon" href="data:image\/svg\+xml,([^"]+)">/);
@@ -46,43 +39,39 @@ test('Favicon: eingebettetes SVG, nur Mitternacht und OPM-Violett, kein externer
   assert.doesNotMatch(svg, /href=|src=|url\(/);
 });
 
-test('Formular mit Platzhalter geht nie live: Kasten wird zur Zeile "Liste öffnet in Kürze"', () => {
-  assert.ok(QUELLE.includes(`action="${PLATZHALTER}"`), 'Positivkontrolle: die Quelle hat noch den Platzhalter');
-  for (const html of [LIVE, VORSCHAU]) {
-    assert.doesNotMatch(html, /<form\b|<input\b|type="email"|__WARTELISTE_ENDPUNKT__/);
-    assert.doesNotMatch(html, /class="liste-kasten/);
-    assert.match(html, /<p class="bald auf d3">Die Warteliste öffnet in Kürze\.<\/p>/);
-  }
-  // Nichts, was eine Anmeldung verspricht, die es nicht gibt.
-  assert.doesNotMatch(sichtbar(LIVE), /Trag dich auf die Liste|Auf die Liste|Abmelden jederzeit/);
-});
 
-test('Ein Formular mit Platzhalter-Adresse bricht den Bau ab, falls es doch durchrutscht', () => {
-  const kaputt = QUELLE.replace(/<div class="liste-kasten[\s\S]*?<\/form>/, '<form action="__WARTELISTE_ENDPUNKT__">');
-  assert.throws(() => bauen(kaputt, { entwurf: false }), /Platzhalter/);
-});
 
-test('"Hier fehlt dein Teil" (LOoNATIC-Zahlen) nur im Deploy-Preview, nie in der Produktion', () => {
-  assert.match(QUELLE, /<div class="offen">/, 'Positivkontrolle: die Quelle hat die Notiz');
-  assert.doesNotMatch(LIVE, /class="offen"|Hier fehlt dein Teil|33 Tage/);
-  assert.match(VORSCHAU, /Hier fehlt dein Teil/);
+test('Arbeitsnotizen gehen nie live - die Regel gilt weiter, auch ohne Notiz in der Vorlage', () => {
+  // v2 bringt keine "Hier fehlt dein Teil"-Kaesten mehr mit. Die Regel bleibt:
+  // waere eine da, duerfte sie nur im Deploy-Preview erscheinen.
+  assert.doesNotMatch(QUELLE, /<div class="offen">/, 'die neue Vorlage hat keine');
+  assert.doesNotMatch(LIVE, /class="offen"|Hier fehlt dein Teil/);
   for (const env of [{}, { CONTEXT: 'production' }, { CONTEXT: 'dev' }]) assert.equal(entwurfAus(env), false, JSON.stringify(env));
   for (const env of [{ CONTEXT: 'deploy-preview' }, { CONTEXT: 'branch-deploy' }]) assert.equal(entwurfAus(env), true, JSON.stringify(env));
   assert.match(readFileSync(new URL('./bau.mjs', import.meta.url), 'utf8'), /entwurf: entwurfAus\(process\.env\)/);
+  // Gegenprobe an der Funktion selbst: mit Notiz greift der Schnitt.
+  const probe = '<p>a</p><div class="offen">geheim</div><p>b</p>';
+  assert.doesNotMatch(ohneNotizen(probe, false), /geheim/);
+  assert.match(ohneNotizen(probe, true), /geheim/);
 });
 
-test('Kein Programmkatalog, kein Quiz, keine Navigation "Programme"/"Test", kein LEGACY, kein ©', () => {
+test('Kein LEGACY, kein ©, keine Navigation - die Ansagen vom 19.09.2026 gelten weiter', () => {
+  // Was sich geaendert hat: die Seite HAT wieder ein Quiz und ein Skript, beides
+  // gewollt (DG 20.09.2026). Der Programmkatalog bleibt weg.
   const t = sichtbar(LIVE);
-  assert.doesNotMatch(t, /LEGACY|©|Programme\b|\bTest\b|Quiz|AMFEEL|CNC/);
-  assert.doesNotMatch(LIVE, /<nav\b|<script\b/);
-  assert.match(t, /LOoNATIC ist die Challenge in OPM/);
+  assert.doesNotMatch(t, /LEGACY|©/);
+  assert.doesNotMatch(LIVE, /<nav\b/);
+  assert.doesNotMatch(t, /\bProgramme\b/, 'kein Katalog');
 });
 
-test('Fuß: nur Impressum / Datenschutz - kein AGB-Link, kein HIGHERPlan, kein Claim', () => {
-  const fuss = LIVE.slice(LIVE.indexOf('<div class="fuss">'));
-  assert.equal(sichtbar(fuss.replace(/<span>\/<\/span>/g, ' / ')), 'Impressum / Datenschutz');
-  for (const p of ['/impressum', '/datenschutz']) assert.match(fuss, new RegExp(`href="${p}"`));
-  assert.doesNotMatch(LIVE, /href="\/agb"/, 'AGB-Link vorerst raus (kein Vertrag, kein Verkauf)');
+test('Fuß: kein HIGHERPlan, kein Claim, kein AGB-Link - Ansage vom 19.09.2026', () => {
+  // DG 20.09.2026: "Die Ansage vom 19.09. gilt weiter. Die Regel war in meiner
+  // Vorlage nur nicht mitgenommen." Also nimmt der Bau sie wieder heraus.
+  assert.match(QUELLE, /<span>HIGHERPlan GmbH<\/span>/, 'Positivkontrolle: die Vorlage hat den Hinweis');
+  const fuss = LIVE.slice(LIVE.indexOf('<footer>'), LIVE.indexOf('</footer>') + 9);
+  assert.equal(sichtbar(fuss), 'OPM / One Project Me Impressum Datenschutz');
+  for (const p of ['/impressum', '/datenschutz']) assert.match(fuss, new RegExp(`href="${p}"`), p);
+  assert.doesNotMatch(LIVE, /href="\/agb"/, 'kein Vertrag, kein Verkauf');
   assert.doesNotMatch(LIVE, /HIGHERPlan|höheren Plan|class="claim"/i);
 });
 
@@ -135,11 +124,14 @@ test('Datenschutz: Netlify vollständig wie auf dennisgoldhammer.me, nichts, was
   ]) assert.ok(t.includes(satz), satz);
   for (const art of ['15', '16', '17', '18', '20', '21', '77']) assert.match(t, new RegExp(`Art\\. ${art} DSGVO`), art);
   assert.match(t, /Verantwortlicher HIGHERPlan GmbH Dorfstr\. 43 39539 Havelberg E-Mail: contact@higherplan\.co/);
-  assert.doesNotMatch(t, /Warteliste|Newsletter|Checkbox|Double-Opt-In|Brevo|Sendinblue|Cloudflare|Google Workspace|Quiz|YouTube|Einwilligung/i);
-  // Was sie ueber die Seite sagt, muss stimmen.
-  assert.match(t, /keine Cookies, hat kein Formular, führt kein Skript aus/);
-  assert.doesNotMatch(LIVE, /<script\b|<form\b|document\.cookie|<a [^>]*href="https?:/i, 'Startseite: kein Skript, kein Formular, keine externen Links');
-  assert.doesNotMatch(LIVE, /@font-face|url\(/, 'Startseite lädt keine Schriften');
+  assert.doesNotMatch(t, /Warteliste|Newsletter|Checkbox|Double-Opt-In|Brevo|Sendinblue|Cloudflare|Google Workspace|YouTube/i);
+  // Was sie ueber die Seite sagt, muss stimmen - und die Seite hat sich geaendert:
+  // sie fuehrt jetzt ein Skript aus (der Test), hat aber weiter kein Formular.
+  assert.match(t, /keine Cookies, hat kein Formular und bindet keine Analyse-/);
+  assert.match(t, /Der Test läuft vollständig in deinem Browser/);
+  assert.doesNotMatch(t, /führt kein Skript aus/, 'das waere jetzt falsch');
+  assert.doesNotMatch(LIVE, /<form\b|document\.cookie|<a [^>]*href="https?:/i, 'kein Formular, kein Cookie, kein externer Link');
+  assert.doesNotMatch(LIVE, /@font-face/, 'keine nachgeladene Schrift');
 });
 
 test('Fußlinks: Startseite und Rechtsseiten zeigen auf /impressum und /datenschutz, beide ausgeliefert', () => {

@@ -1,201 +1,988 @@
-<!DOCTYPE html>
-<html lang="de" data-theme="dark">
+<!doctype html>
+<html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OPM — Projekt deines Lebens</title>
-<meta name="description" content="Projekt deines Lebens.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' fill='%230b0f16'/%3E%3Crect x='3.5' y='3.5' width='25' height='25' fill='none' stroke='%239d4eff' stroke-width='2'/%3E%3Crect x='12' y='12' width='8' height='8' fill='%239d4eff'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Projekt deines Lebens</title>
+<meta name="description" content="OPM — persönliche Entwicklung, die nicht für alle dieselbe ist.">
+
 <style>
-  :root{
-    --mitternacht:#0b0f16;
-    --papier:#f7f6f2;
-    --schwarz:#0a0a0a;
-    --linie:rgba(247,246,242,.14);
-    --linie-stark:rgba(247,246,242,.30);
-    --leise:rgba(247,246,242,.52);
-    --flaeche:rgba(247,246,242,.035);
-    --violett:#9d4eff;      /* 500 — Flächen, Linien, Display */
-    --violett-hell:#c49bff; /* 300 — Text auf Dunkel */
-  }
-  *{box-sizing:border-box;border-radius:0;}
-  html,body{margin:0;padding:0;overflow-x:hidden;}
-  body{
-    background:var(--mitternacht);color:var(--papier);
-    font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-    line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;
-  }
-  .wrap{max-width:32rem;margin:0 auto;padding:2.6rem 1.4rem 3rem;}
-  button{font-family:inherit;cursor:pointer;}
-  a{color:inherit;}
+:root{
+  --ground:#0b0f16;
+  --ground-2:#11161f;
+  --ground-3:#161c27;
+  --ink:#ece9f2;
+  --ink-soft:#a5a1b6;
+  --ink-faint:#6f6b82;
+  --line:#242a36;
+  --line-soft:#1b212b;
 
-  .kopf{display:flex;align-items:center;gap:.95rem;margin:0 0 2.6rem;}
-  .marke{
-    width:3.4rem;height:3.4rem;flex:none;display:grid;place-items:center;
-    border:1px solid var(--violett);color:var(--violett-hell);
-    font-size:.72rem;font-weight:700;letter-spacing:-.02em;
-  }
-  .kopf-txt{min-width:0;}
-  .kopf-name{display:block;font-size:.93rem;font-weight:600;letter-spacing:-.015em;line-height:1.2;}
-  .kopf-rollen{
-    display:block;text-transform:uppercase;font-size:.56rem;font-weight:400;
-    letter-spacing:.24em;color:var(--leise);margin-top:.3rem;
-  }
+  --haus:#9d4eff;
+  --haus-dim:#6f35b8;
 
-  h1{
-    font-weight:800;font-size:clamp(2rem,9.1vw,3.35rem);line-height:.95;
-    letter-spacing:-.05em;margin:0 0 1.15rem;overflow-wrap:break-word;
-  }
-  .lead{
-    font-size:clamp(1.08rem,4.6vw,1.32rem);font-weight:300;line-height:1.35;
-    letter-spacing:-.02em;color:var(--papier);margin:0 0 2.4rem;
-  }
-  .lead b{font-weight:600;}
+  --stimme:#c98a2e;
+  --ursprung:#19aab4;
+  --mut:#5f79e0;
+  --macher:#d6412f;
 
-  .gruppe{
-    text-transform:uppercase;font-size:.57rem;font-weight:500;
-    letter-spacing:.28em;color:var(--leise);margin:2.6rem 0 .8rem;
-  }
-  p{font-size:1rem;font-weight:300;line-height:1.6;
-    color:rgba(247,246,242,.82);margin:0 0 1rem;}
-  p b{color:var(--papier);font-weight:600;}
-  p:last-child{margin-bottom:0;}
+  /* Wie auf dennisgoldhammer.me: eine Familie, drei Rollen */
+  --inter:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --fd:var(--inter);
+  --fb:var(--inter);
+  --fm:var(--inter);
 
-  .zitat{border-left:1px solid var(--violett);padding:.1rem 0 .1rem 1.15rem;margin:1.8rem 0;}
-  .zitat p{font-size:1.12rem;font-weight:400;color:var(--papier);margin:0;
-           line-height:1.42;letter-spacing:-.015em;}
+  --wrap:1080px;
+  color-scheme:dark;
+}
 
-  /* Warteliste */
-  .liste-kasten{
-    background:var(--schwarz);border:1px solid var(--violett);
-    padding:1.35rem 1.25rem 1.3rem;margin:1.6rem 0 0;
-  }
-  .lk-kick{
-    display:block;text-transform:uppercase;font-size:.56rem;font-weight:500;
-    letter-spacing:.26em;color:var(--violett-hell);margin-bottom:.6rem;
-  }
-  .lk-titel{font-size:1.3rem;font-weight:700;letter-spacing:-.03em;margin:0 0 .7rem;line-height:1.1;}
-  .lk-text{font-size:.93rem;font-weight:300;color:rgba(247,246,242,.78);margin:0 0 1.15rem;}
-  .feld{display:flex;flex-direction:column;gap:.55rem;}
-  .feld input[type=email]{
-    width:100%;background:transparent;color:var(--papier);
-    border:1px solid var(--linie-stark);padding:.86rem .9rem;
-    font-family:inherit;font-size:1rem;font-weight:300;
-  }
-  .feld input[type=email]::placeholder{color:rgba(247,246,242,.38);}
-  .feld input[type=email]:focus{outline:none;border-color:var(--violett);}
-  .feld button{
-    display:flex;align-items:center;justify-content:space-between;gap:1rem;
-    width:100%;text-align:left;background:transparent;color:var(--papier);
-    border:1px solid var(--violett);padding:.92rem 1rem;
-    font-size:1rem;font-weight:600;letter-spacing:-.015em;
-    transition:background-color .18s ease;
-  }
-  .feld button:hover,.feld button:focus-visible{
-    background:rgba(157,78,255,.16);outline:none;
-  }
-  .feld button span:last-child{font-weight:400;opacity:.6;}
-  .klein{font-size:.74rem;font-weight:300;color:var(--leise);margin:.85rem 0 0;line-height:1.45;}
-  .klein a{color:inherit;}
+*{box-sizing:border-box}
 
-  .offen{border:1px dashed var(--violett);padding:1.05rem 1.1rem;margin:1.6rem 0;}
-  .offen p{font-size:.88rem;color:rgba(247,246,242,.7);margin:0;}
-  .offen .mk{
-    display:block;text-transform:uppercase;font-size:.55rem;font-weight:500;
-    letter-spacing:.24em;color:var(--violett-hell);margin-bottom:.55rem;
-  }
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--fb);
+  font-size:17px;
+  font-weight:300;
+  line-height:1.58;
+  letter-spacing:-.003em;
+  -webkit-font-smoothing:antialiased;
+}
 
-  .fuss{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--linie);}
-  .claim{text-transform:uppercase;font-size:.61rem;font-weight:400;
-         letter-spacing:.26em;color:var(--papier);margin:0 0 .7rem;}
-  .recht{font-size:.56rem;font-weight:400;letter-spacing:.16em;
-         text-transform:uppercase;color:var(--leise);margin:0;}
-  .recht a{text-decoration:none;}
-  .recht a:hover,.recht a:focus-visible{color:var(--papier);}
-  .recht span{margin:0 .4rem;opacity:.4;}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:22px;padding-right:22px}
+section{padding-block:clamp(56px,9vw,118px)}
 
-  .auf{opacity:0;transform:translateY(.45rem);animation:auf .55s cubic-bezier(.2,.7,.3,1) forwards;}
-  .d1{animation-delay:.03s}.d2{animation-delay:.09s}.d3{animation-delay:.15s}
-  .d4{animation-delay:.21s}.d5{animation-delay:.27s}
-  @keyframes auf{to{opacity:1;transform:none;}}
-  @media (prefers-reduced-motion:reduce){
-    .auf{animation:none;opacity:1;transform:none;}
-    *{transition:none !important;}
-  }
+h1,h2,h3,.dsp{
+  font-family:var(--fd);font-weight:800;letter-spacing:-.025em;
+  line-height:1.02;text-wrap:balance;margin:0;
+}
+p{margin:0}
+
+.eyebrow{font-weight:500;font-family:var(--fm);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint)}
+.lead{font-size:clamp(18px,2.2vw,21px);color:var(--ink-soft);max-width:37ch}
+
+/* ───────────── Hero ───────────── */
+
+#hero{padding-block:clamp(74px,14vw,152px) clamp(52px,8vw,100px);position:relative;overflow:hidden}
+#hero::after{
+  content:"";position:absolute;left:-14%;top:-48%;
+  width:72%;aspect-ratio:1;max-width:100%;
+  background:radial-gradient(circle,rgba(157,78,255,.2),transparent 66%);
+  pointer-events:none;
+}
+.hero-in{position:relative;display:flex;flex-direction:column;gap:30px}
+.mark{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.mark-sig{font-family:var(--fd);font-weight:800;font-size:15px;letter-spacing:.02em;color:var(--haus)}
+.mark-sub{font-weight:500;font-family:var(--fm);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint)}
+
+h1{font-size:clamp(42px,9.2vw,96px)}
+.hero-turn{
+  font-family:var(--fd);font-weight:600;
+  font-size:clamp(20px,3vw,30px);line-height:1.24;letter-spacing:-.02em;
+  color:var(--ink-soft);max-width:24ch;
+}
+.hero-turn em{font-style:normal;color:var(--ink);border-bottom:2px solid var(--haus);padding-bottom:1px}
+
+.scroll-cue{font-family:var(--fm);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);display:flex;align-items:center;gap:10px;margin-top:8px}
+.scroll-cue span{width:34px;height:1px;background:var(--line);display:block}
+
+/* ───────────── Nicht wie die anderen ───────────── */
+
+#anders{background:var(--ground-2);border-block:1px solid var(--line-soft)}
+.anders-in{display:flex;flex-direction:column;gap:34px}
+.anders-h{font-size:clamp(32px,6vw,62px)}
+.anders-body{display:grid;grid-template-columns:1fr;gap:22px;max-width:60ch}
+@media(min-width:760px){.anders-body{grid-template-columns:repeat(2,1fr);gap:34px;max-width:none}}
+.anders-body p{color:var(--ink-soft)}
+.anders-body strong{font-weight:400;color:var(--ink)}
+
+.gleich{
+  border-left:2px solid var(--haus);padding:6px 0 6px 20px;
+  font-family:var(--fd);font-weight:600;letter-spacing:-.02em;
+  font-size:clamp(19px,2.6vw,25px);line-height:1.28;color:var(--ink);max-width:34ch;
+}
+
+/* ───────────── Die Wendung ───────────── */
+
+.wendung-grid{display:grid;grid-template-columns:1fr;gap:38px}
+@media(min-width:820px){.wendung-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:64px;align-items:start}}
+.named{display:flex;flex-direction:column;gap:2px;font-family:var(--fd);font-weight:600;font-size:clamp(26px,4.6vw,40px);line-height:1.12;letter-spacing:-.02em}
+.named b{font-weight:800;color:var(--haus)}
+.named i{font-style:normal;color:var(--ink-faint)}
+.wendung-body{display:flex;flex-direction:column;gap:22px;font-size:clamp(17px,2vw,19px)}
+.wendung-body strong{font-weight:400;color:var(--ink);background:linear-gradient(transparent 62%,rgba(157,78,255,.28) 62%)}
+.wendung-body p{color:var(--ink-soft);max-width:52ch}
+
+/* ───────────── Split ───────────── */
+
+.split{display:grid;grid-template-columns:1fr;gap:28px}
+@media(min-width:820px){.split{grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:64px;align-items:start}}
+.split h2{font-size:clamp(28px,4.4vw,44px)}
+.split-text{display:flex;flex-direction:column;gap:18px;color:var(--ink-soft);max-width:54ch}
+.split-text em{font-style:normal;color:var(--ink)}
+
+/* ───────────── Vier Tonlagen ───────────── */
+
+#tonlagen{background:var(--ground-2);border-block:1px solid var(--line-soft)}
+.probe{
+  font-family:var(--fd);font-weight:600;font-size:clamp(17px,2.2vw,20px);
+  letter-spacing:-.015em;color:var(--ink);margin-top:34px;max-width:46ch;line-height:1.35;
+}
+.tones{display:grid;grid-template-columns:1fr;gap:12px;margin-top:22px}
+@media(min-width:700px){.tones{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.tones{grid-template-columns:repeat(4,1fr)}}
+
+.tone{
+  border:1px solid var(--line);border-top:2px solid var(--tc);
+  background:var(--ground);padding:24px 22px 26px;
+  display:flex;flex-direction:column;gap:14px;
+  transition:background .25s ease,transform .25s ease;
+}
+.tone:hover{background:var(--ground-3);transform:translateY(-2px)}
+.tone-name{font-weight:500;font-family:var(--fm);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--tc)}
+.tone-line{font-family:var(--fd);font-weight:600;font-size:19px;line-height:1.3;letter-spacing:-.015em;color:var(--ink)}
+.tone-tail{font-size:15px;line-height:1.5;color:var(--ink-faint)}
+
+.t-stimme{--tc:var(--stimme)}
+.t-ursprung{--tc:var(--ursprung)}
+.t-mut{--tc:var(--mut)}
+.t-macher{--tc:var(--macher)}
+
+.tones-foot{margin-top:24px;color:var(--ink-soft);max-width:52ch}
+.tones-foot em{font-style:normal;color:var(--ink)}
+
+/* ───────────── Quiz ───────────── */
+
+.quiz-head{display:flex;flex-direction:column;gap:16px;margin-bottom:40px}
+.quiz-claim{font-family:var(--fd);font-weight:800;font-size:clamp(25px,4.2vw,40px);letter-spacing:-.025em;line-height:1.08;max-width:19ch}
+.quiz-claim em{font-style:normal;color:var(--haus)}
+
+.q-bars{display:flex;gap:5px;margin-bottom:34px}
+.q-bar{height:2px;flex:1;background:var(--line);transition:background .3s ease}
+.q-bar.done{background:var(--haus-dim)}
+.q-bar.now{background:var(--haus)}
+
+.q-stage{display:grid;grid-template-columns:1fr;gap:28px}
+@media(min-width:860px){.q-stage{grid-template-columns:minmax(0,.72fr) minmax(0,1fr);gap:56px;align-items:start}}
+.q-count{font-weight:500;font-family:var(--fm);font-size:11px;letter-spacing:.18em;color:var(--ink-faint);margin-bottom:14px}
+.q-text{font-family:var(--fd);font-weight:600;font-size:clamp(22px,3.4vw,31px);line-height:1.16;letter-spacing:-.02em}
+
+.q-opts{display:flex;flex-direction:column;gap:10px}
+.opt{
+  font-family:var(--fb);font-size:16px;font-weight:300;line-height:1.45;text-align:left;color:var(--ink);
+  background:var(--ground-2);border:1px solid var(--line);padding:19px 20px;cursor:pointer;
+  display:flex;gap:16px;align-items:flex-start;
+  transition:border-color .18s ease,background .18s ease,transform .18s ease;
+}
+.opt:hover{border-color:var(--haus);background:var(--ground-3);transform:translateX(3px)}
+.opt:focus-visible{outline:2px solid var(--haus);outline-offset:2px}
+.opt-k{font-family:var(--fm);font-size:11px;color:var(--ink-faint);padding-top:4px;flex:none}
+.opt:hover .opt-k{color:var(--haus)}
+
+.q-back{margin-top:20px;background:none;border:0;cursor:pointer;font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);padding:6px 0}
+.q-back:hover{color:var(--ink)}
+.q-back:focus-visible{outline:2px solid var(--haus);outline-offset:3px}
+
+/* ───────────── Ergebnis ───────────── */
+
+#res{border-block:1px solid var(--line-soft);background:var(--ground-2)}
+#res[hidden]{display:none!important}
+
+.res-top{display:flex;flex-direction:column;gap:10px;margin-bottom:34px}
+.res-kicker{font-weight:500;font-family:var(--fm);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint)}
+.res-name{font-family:var(--fd);font-weight:800;font-size:clamp(38px,7.6vw,76px);letter-spacing:-.03em;line-height:1;color:var(--wc)}
+.res-world{font-weight:500;font-family:var(--fm);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft)}
+
+.res-grid{display:grid;grid-template-columns:1fr;gap:38px}
+@media(min-width:880px){.res-grid{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:60px;align-items:start}}
+.res-body{display:flex;flex-direction:column;gap:20px}
+.res-desc{font-size:clamp(18px,2.2vw,21px);line-height:1.5;max-width:46ch}
+.res-price{border-left:2px solid var(--wc);padding:4px 0 4px 18px;color:var(--ink-soft);max-width:46ch;font-weight:400}
+.res-note{font-size:15px;line-height:1.55;color:var(--ink-soft);border:1px solid var(--line);padding:16px 18px;max-width:52ch}
+.res-note b{color:var(--ink);font-weight:400;font-family:var(--fd);font-size:14px;letter-spacing:.01em}
+
+.res-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.btn{font-family:var(--fd);font-weight:600;font-size:15px;letter-spacing:-.01em;padding:14px 22px;cursor:pointer;border:1px solid var(--wc);background:var(--wc);color:#0b0f16;transition:opacity .18s ease}
+.btn:hover{opacity:.84}
+.btn-ghost{background:none;color:var(--ink);border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--ink-faint);opacity:1}
+.btn:focus-visible,.btn-ghost:focus-visible{outline:2px solid var(--haus);outline-offset:3px}
+
+.mix{border:1px solid var(--line);padding:24px 22px;display:flex;flex-direction:column;gap:20px;background:var(--ground)}
+.mix-h{display:flex;flex-direction:column;gap:6px}
+.mix-h b{font-family:var(--fd);font-weight:600;font-size:15px;color:var(--ink)}
+.mix-h span{font-size:14px;color:var(--ink-soft);line-height:1.5}
+.mix-rows{display:flex;flex-direction:column;gap:14px}
+.mix-row{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:baseline}
+.mix-label{font-family:var(--fd);font-weight:600;font-size:14px;color:var(--ink-soft)}
+.mix-row.lead .mix-label{color:var(--ink)}
+.mix-val{font-family:var(--fm);font-size:12px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.mix-row.lead .mix-val{color:var(--ink)}
+.mix-track{grid-column:1/-1;height:3px;background:var(--line-soft);position:relative;overflow:hidden}
+.mix-fill{position:absolute;inset:0 auto 0 0;width:0;background:var(--mc);transition:width .75s cubic-bezier(.2,.7,.25,1)}
+.mix-foot{font-size:13px;line-height:1.55;color:var(--ink-faint);border-top:1px solid var(--line-soft);padding-top:16px}
+
+/* ───────────── Räume ───────────── */
+
+.rooms{display:flex;flex-direction:column;border-top:1px solid var(--line);margin-top:38px}
+.room{display:grid;grid-template-columns:1fr;gap:10px;padding:26px 0;border-bottom:1px solid var(--line)}
+@media(min-width:800px){.room{grid-template-columns:minmax(0,230px) minmax(0,1fr) minmax(0,190px);gap:34px;align-items:baseline}}
+.room-id{display:flex;flex-direction:column;gap:5px}
+.room-name{font-family:var(--fd);font-weight:800;font-size:22px;letter-spacing:-.02em;color:var(--rc)}
+.room-brand{font-weight:500;font-family:var(--fm);font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:var(--ink-faint)}
+.room-for{color:var(--ink-soft);max-width:48ch;font-size:16px}
+.room-meta{display:flex;flex-direction:column;gap:3px;font-family:var(--fm);font-size:12px;color:var(--ink-faint)}
+.room-meta b{color:var(--ink-soft);font-weight:400;letter-spacing:.05em}
+
+.r-stimme{--rc:var(--stimme)}
+.r-ursprung{--rc:var(--ursprung)}
+.r-mut{--rc:var(--mut)}
+.r-macher{--rc:var(--macher)}
+
+/* ───────────── Haus ───────────── */
+
+#haus{background:var(--ground-2);border-block:1px solid var(--line-soft)}
+
+.hc{border:1px solid var(--haus-dim);background:var(--ground);padding:clamp(26px,4vw,40px);margin-top:36px;display:grid;grid-template-columns:1fr;gap:26px}
+@media(min-width:840px){.hc{grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:52px;align-items:start}}
+.hc-tag{font-weight:500;font-family:var(--fm);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--haus)}
+.hc-name{font-family:var(--fd);font-weight:800;font-size:clamp(26px,4vw,38px);letter-spacing:-.025em;margin-top:10px}
+.hc-text{margin-top:16px;color:var(--ink-soft);max-width:50ch;display:flex;flex-direction:column;gap:14px}
+.hc-ladder{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
+.hc-step{display:grid;grid-template-columns:34px 1fr;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.hc-num{font-family:var(--fm);font-size:13px;color:var(--haus);font-variant-numeric:tabular-nums}
+.hc-what{font-size:15px;color:var(--ink-soft);line-height:1.4}
+.hc-what b{color:var(--ink);font-weight:400;font-family:var(--fd);font-size:14px}
+
+.haus-list{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:36px}
+@media(min-width:780px){.haus-list{grid-template-columns:repeat(3,1fr)}}
+.haus-item{background:var(--ground-2);padding:26px 24px;display:flex;flex-direction:column;gap:9px}
+.haus-item h3{font-size:19px;font-weight:600;letter-spacing:-.015em}
+.haus-item p{color:var(--ink-soft);font-size:16px;line-height:1.55}
+.haus-tag{font-weight:500;font-family:var(--fm);font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--haus)}
+.haus-tag.out{color:var(--macher)}
+
+
+/* ───────────── Von innen ───────────── */
+
+#innen{background:var(--ground-2);border-block:1px solid var(--line-soft)}
+.vorschau-tag{font-weight:500;
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--fm);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--haus);border:1px solid var(--haus-dim);padding:6px 11px;margin-bottom:26px;
+}
+.vorschau-tag i{width:5px;height:5px;background:var(--haus);display:block;font-style:normal}
+
+.hub{
+  display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);
+  border:1px solid var(--line);margin-top:34px;
+}
+@media(min-width:900px){.hub{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}}
+.hub-pane{background:var(--ground);padding:26px 24px 28px;display:flex;flex-direction:column;gap:18px}
+
+.hub-top{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.hub-hallo{font-family:var(--fd);font-weight:800;font-size:22px;letter-spacing:-.025em}
+.hub-streak{font-weight:500;font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--haus)}
+
+.heute{display:flex;flex-direction:column;border-top:1px solid var(--line-soft)}
+.heute-zeile{
+  display:grid;grid-template-columns:20px 1fr auto;gap:13px;align-items:center;
+  padding:13px 0;border-bottom:1px solid var(--line-soft);
+}
+.kasten{width:16px;height:16px;border:1px solid var(--ink-faint);display:block}
+.heute-zeile.ok .kasten{background:var(--haus);border-color:var(--haus);position:relative}
+.heute-zeile.ok .kasten::after{
+  content:"";position:absolute;left:4px;top:1px;width:5px;height:9px;
+  border:solid #0b0f16;border-width:0 2px 2px 0;transform:rotate(42deg);
+}
+.heute-was{font-family:var(--fd);font-weight:600;font-size:15px;color:var(--ink)}
+.heute-zeile.ok .heute-was{color:var(--ink-faint);text-decoration:line-through;text-decoration-thickness:1px}
+.heute-sub{font-size:13px;color:var(--ink-faint);font-family:var(--fm);letter-spacing:.05em}
+
+.hub-note{font-size:13px;line-height:1.55;color:var(--ink-faint);border-top:1px solid var(--line-soft);padding-top:15px}
+
+.hub-raeume{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.hub-raum{
+  border:1px solid var(--line);border-left:2px solid var(--hc2);
+  padding:14px 14px 16px;display:flex;flex-direction:column;gap:5px;background:var(--ground-2);
+}
+.hub-raum b{font-family:var(--fd);font-weight:600;font-size:14px;color:var(--ink)}
+.hub-raum span{font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--hc2)}
+.hub-raum i{font-style:normal;font-size:13px;color:var(--ink-faint);line-height:1.4}
+
+.hub-termin{border:1px solid var(--line);padding:16px 16px 18px;display:flex;flex-direction:column;gap:7px;background:var(--ground-2)}
+.hub-termin b{font-family:var(--fd);font-weight:600;font-size:15px}
+.hub-termin span{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+.hub-balken{height:3px;background:var(--line-soft);position:relative;margin-top:4px}
+.hub-balken i{position:absolute;inset:0 auto 0 0;width:36%;background:var(--haus);display:block}
+
+/* ───────────── Warteliste ───────────── */
+
+#liste{border-block:1px solid var(--line-soft)}
+.wl{
+  border:1px solid var(--haus);background:var(--ground-2);
+  padding:clamp(26px,4vw,40px);margin-top:34px;
+  display:grid;grid-template-columns:1fr;gap:28px;
+}
+@media(min-width:860px){.wl{grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:56px;align-items:start}}
+.wl-h{font-family:var(--fd);font-weight:800;font-size:clamp(24px,3.6vw,34px);letter-spacing:-.025em;line-height:1.08}
+.wl-text{margin-top:16px;color:var(--ink-soft);display:flex;flex-direction:column;gap:14px;max-width:46ch}
+.wl-form{display:flex;flex-direction:column;gap:12px}
+.wl-form input{font-weight:300;
+  width:100%;background:var(--ground);color:var(--ink);border:1px solid var(--line);
+  padding:16px 16px;font-family:var(--fb);font-size:17px;
+}
+.wl-form input::placeholder{color:var(--ink-faint)}
+.wl-form input:focus{outline:none;border-color:var(--haus)}
+.wl-ok{
+  display:flex;gap:12px;align-items:flex-start;
+  font-size:14px;line-height:1.5;color:var(--ink-soft);cursor:pointer;
+}
+.wl-ok input{width:17px;height:17px;flex:none;margin-top:3px;accent-color:var(--haus)}
+.wl-ok a{color:var(--ink)}
+.wl-btn{
+  font-family:var(--fd);font-weight:600;font-size:16px;padding:16px 20px;cursor:pointer;
+  background:var(--haus);color:#0b0f16;border:1px solid var(--haus);
+}
+.wl-btn:hover{opacity:.86}
+.wl-btn:disabled{opacity:.4;cursor:not-allowed}
+.wl-klein{font-size:12px;line-height:1.55;color:var(--ink-faint);font-family:var(--fm);letter-spacing:.03em}
+.wl-danke{border:1px solid var(--haus);padding:20px 18px;display:flex;flex-direction:column;gap:9px}
+.wl-danke b{font-family:var(--fd);font-weight:600;font-size:17px;color:var(--ink)}
+.wl-danke span{font-size:14px;color:var(--ink-soft);line-height:1.5}
+.wl-danke em{font-style:normal;font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--haus)}
+
+/* ───────────── Nicht für ───────────── */
+
+.nots{display:flex;flex-direction:column;margin-top:30px;max-width:64ch}
+.not{display:flex;gap:18px;padding:18px 0;border-bottom:1px solid var(--line-soft);color:var(--ink-soft)}
+.not:first-child{border-top:1px solid var(--line-soft)}
+.not b{font-family:var(--fm);font-size:12px;color:var(--ink-faint);flex:none;padding-top:5px;letter-spacing:.08em}
+
+/* ───────────── Wer ───────────── */
+
+#wer{border-top:1px solid var(--line-soft)}
+.wer-name{font-family:var(--fd);font-weight:800;font-size:clamp(26px,4vw,38px);letter-spacing:-.025em}
+.wer-role{font-weight:500;font-family:var(--fm);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin-top:8px}
+.wer-text{margin-top:22px;color:var(--ink-soft);max-width:50ch;display:flex;flex-direction:column;gap:16px}
+
+footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-faint);font-family:var(--fm);font-size:11px;letter-spacing:.06em;display:flex;flex-wrap:wrap;gap:8px 26px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<main class="wrap">
 
-  <div class="kopf auf d1">
-    <span class="marke" aria-hidden="true">OPM</span>
-    <span class="kopf-txt">
-      <span class="kopf-name">ONE PROJECT ME</span>
-      <span class="kopf-rollen">Eine Community</span>
-    </span>
+<div id="hero">
+  <div class="wrap hero-in">
+    <div class="mark">
+      <span class="mark-sig">OPM</span>
+      <span class="mark-sub">One Project Me / Persönliche Entwicklung / Dennis Goldhammer</span>
+    </div>
+    <h1>Projekt<br>deines Lebens.</h1>
+    <p class="hero-turn">Und trotzdem hat alles andere Vorrang. <em>Nur du nicht.</em></p>
+    <div class="scroll-cue"><span></span>Weiterlesen</div>
   </div>
+</div>
 
-  <h1 class="auf d2">Projekt deines Lebens.</h1>
-
-  <p class="lead auf d2">Du bist das einzige Projekt, das wirklich zählt — und das
-  einzige, in das du nie genug investiert hast.</p>
-
-  <div class="liste-kasten auf d3">
-    <span class="lk-kick">Noch nicht offen</span>
-    <p class="lk-titel">Trag dich auf die Liste</p>
-    <p class="lk-text">OPM startet, sobald genug Leute darauf stehen. Vorher wäre
-    es ein leerer Raum.</p>
-    <form class="feld" method="post" action="__WARTELISTE_ENDPUNKT__">
-      <input type="email" name="email" autocomplete="email" required
-             placeholder="deine@mail.de" aria-label="Deine E-Mail-Adresse">
-      <button type="submit">
-        <span>Auf die Liste</span>
-        <span aria-hidden="true">→</span>
-      </button>
-    </form>
-    <p class="klein">Kostet nichts und verpflichtet zu nichts. Du bekommst eine
-    Nachricht, wenn es losgeht — sonst nichts. Abmelden jederzeit mit einem Klick.
-    <a href="/datenschutz">Datenschutz</a></p>
+<section id="anders">
+  <div class="wrap anders-in">
+    <h2 class="anders-h">Du bist nicht<br>wie die anderen.</h2>
+    <div class="anders-body">
+      <p>Das ist keine Schmeichelei, das ist der Ausgangspunkt. <strong>Dein Leben hat eine Reihenfolge</strong> — und die hat nicht irgendein Trend gesetzt, sondern deine Geschichte, deine Leute, dein Beruf, dein Kopf.</p>
+      <p>Deshalb funktioniert kein Weg, der für alle derselbe ist. Nicht weil manche besser wären. Sondern weil <strong>niemand auf dieselben Worte, Farben und Menschen anspringt</strong> — und weil das, was bei dir vorgeht statt dir, bei jedem etwas anderes ist.</p>
+    </div>
+    <p class="gleich">Derselbe Plan, dieselbe Regel, dieselbe Übung — bei vier Menschen vier Ergebnisse. Drei davon haben sich nicht weniger angestrengt.</p>
   </div>
+</section>
 
-  <p class="gruppe auf d4">Was das hier ist</p>
-
-  <p>Kein Kurs, den du durcharbeitest und danach wieder allein bist. <b>Eine
-  Community</b> — Menschen, die am selben Projekt arbeiten wie du: an sich
-  selbst.</p>
-
-  <p>Es läuft monatlich. Drin sind Challenges, Live-Events und Treffen. Du
-  gehst, wann du willst.</p>
-
-  <div class="zitat">
-    <p>Eine bessere Welt fängt immer im Spiegel an.</p>
+<section id="wendung">
+  <div class="wrap wendung-grid">
+    <div class="named">
+      <span><b>Himmel</b></span>
+      <span><b>Paradies</b></span>
+      <span><b>Freiheit</b></span>
+      <span><i>Ruhe. Genug. Endlich.</i></span>
+    </div>
+    <div class="wendung-body">
+      <p>Vier Menschen, vier Wörter, ein gemeinter Zustand: <strong>machen können, was einem lieb ist.</strong> Nicht müssen. Nicht vorher fragen.</p>
+      <p>Das sind keine Orte, an die man irgendwann kommt. Das sind Zustände, in die man gerät — und aus denen man wieder rausfällt, wenn man nicht aufpasst.</p>
+      <p>Gleich viel wert ist hier jeder. Nur tut keiner dasselbe, um dahin zu kommen.</p>
+    </div>
   </div>
+</section>
 
-  <p class="gruppe auf d4">Die Challenge</p>
+<section id="tonlagen">
+  <div class="wrap">
+    <div class="split">
+      <h2>Was bei dir<br>vorgeht statt dir.</h2>
+      <div class="split-text">
+        <p>Vier Mal derselbe Satz vom Anfang, vier Mal anders gesagt. Einer davon trifft dich mitten rein, drei lassen dich kalt — <em>unabhängig davon, für wie klug du sie hältst.</em></p>
+        <p>Das ist kein Persönlichkeitstest und keine Schublade. Das ist der Grund, warum gleich neun Fragen kommen.</p>
+      </div>
+    </div>
 
-  <p><b>LOoNATIC</b> ist die Challenge in OPM. Sie ist kein Motivationsprogramm
-  und sie ist nicht für jeden — sie ist der Teil, der wehtut, in Phasen, mit
-  einem klaren Anfang und einem klaren Ende.</p>
+    <p class="probe">Lies alle vier. Drei davon sind Sätze über andere Leute. Bei einem wirst du kurz die Schultern hochziehen.</p>
 
-  <div class="offen">
-    <span class="mk">Hier fehlt dein Teil</span>
-    <p>Die Zahlen zu LOoNATIC — wie viele Tage, wie viele Phasen, was in jeder
-    Phase passiert. Du hattest 33 Tage in drei Phasen im Kopf, warst dir aber
-    nicht sicher. Ich schreibe hier nichts hin, was du nicht bestätigt hast.</p>
+    <div class="tones">
+      <div class="tone t-stimme">
+        <span class="tone-name">Die Menschen</span>
+        <p class="tone-line">„Es ist immer jemand zuerst dran. Was übrig bleibt, ist meins.“</p>
+        <p class="tone-tail">Du funktionierst. Und brauchst zu lange für die Antwort, wenn dich jemand fragt, was du willst.</p>
+      </div>
+      <div class="tone t-ursprung">
+        <span class="tone-name">Das Tempo</span>
+        <p class="tone-line">„Mein Kalender hat entschieden. Ich war nicht gefragt.“</p>
+        <p class="tone-tail">Bei dir läuft alles — nur in einem Takt, den du nicht ausgesucht hast.</p>
+      </div>
+      <div class="tone t-mut">
+        <span class="tone-name">Die Meinung</span>
+        <p class="tone-line">„Was sie sagen würden, wiegt mehr als das, was ich will.“</p>
+        <p class="tone-tail">Du weißt seit Monaten, was du anfangen willst. Und fängst nicht an.</p>
+      </div>
+      <div class="tone t-macher">
+        <span class="tone-name">Das Werk</span>
+        <p class="tone-line">„Alles läuft. Ich komme in meiner eigenen Liste zuletzt.“</p>
+        <p class="tone-tail">Du lieferst. Dir fehlt kein Antrieb — dir fehlen Gegner auf Augenhöhe.</p>
+      </div>
+    </div>
+
+    <p class="tones-foot">Genau das meint <em>persönliche Entwicklung</em> hier: nicht ein Programm, das alle durchlaufen, sondern die Frage, an welcher der vier Stellen es bei dir gerade hängt — und was dort hilft.</p>
   </div>
+</section>
 
-  <p class="gruppe auf d5">Was es kostet</p>
+<section id="quiz">
+  <div class="wrap">
+    <div class="quiz-head">
+      <span class="eyebrow">Neun Fragen / rund zwei Minuten</span>
+      <p class="quiz-claim">Du bist außergewöhnlich. <em>Die Frage ist nur, ob du es weißt.</em></p>
+    </div>
 
-  <p>Sobald OPM läuft, kostet die Mitgliedschaft einen festen Betrag im Monat.
-  Wie hoch, steht noch nicht fest — das sage ich, bevor es losgeht, und nicht
-  erst danach.</p>
+    <div class="q-bars" id="qBars" aria-hidden="true"></div>
 
-  <p>Auf der Liste zu stehen kostet nichts.</p>
-
-  <div class="fuss">
-    <p class="recht"><a href="/impressum">Impressum</a><span>/</span><a href="/datenschutz">Datenschutz</a></p>
+    <div class="q-stage">
+      <div>
+        <div class="q-count" id="qCount">Frage 01 von 09</div>
+        <p class="q-text" id="qText"></p>
+        <button class="q-back" id="qBack" type="button" hidden>← Eine zurück</button>
+      </div>
+      <div class="q-opts" id="qOpts"></div>
+    </div>
   </div>
+</section>
 
-</main>
+<section id="res" hidden>
+  <div class="wrap">
+    <div class="res-top">
+      <span class="res-kicker" id="resKicker">Das hier scheint gerade deins zu sein</span>
+      <h2 class="res-name" id="resName"></h2>
+      <span class="res-world" id="resWorld"></span>
+    </div>
+
+    <div class="res-grid">
+      <div class="res-body">
+        <p class="res-desc" id="resDesc"></p>
+        <p class="res-price" id="resPrice"></p>
+        <div class="res-note" id="resNote"></div>
+        <div class="res-cta">
+          <button class="btn" id="resBtn" type="button"></button>
+          <button class="btn btn-ghost" id="resAgain" type="button">Nochmal beantworten</button>
+        </div>
+      </div>
+
+      <div class="mix">
+        <div class="mix-h">
+          <b>Diese Bereiche sind auch da</b>
+          <span>Ein Ergebnis ist eine Momentaufnahme, keine Zuordnung. In sechs Monaten sieht die Verteilung anders aus — und im Haus stehen dir ohnehin alle Räume offen.</span>
+        </div>
+        <div class="mix-rows" id="mixRows"></div>
+        <p class="mix-foot" id="mixFoot"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="raeume">
+  <div class="wrap">
+    <div class="split">
+      <h2>Die vier Räume.</h2>
+      <div class="split-text">
+        <p>Wer kein Quiz mag, geht direkt rein. Jeder Raum hat eine eigene Sprache, eine eigene Farbe und eine eigene Challenge — die Challenge ist immer zubuchbar, nie Pflicht.</p>
+      </div>
+    </div>
+
+    <div class="rooms">
+      <div class="room r-stimme">
+        <div class="room-id">
+          <span class="room-name">Die Stimme</span>
+          <span class="room-brand">AMFEEL / amfeel.life</span>
+        </div>
+        <p class="room-for">Für Menschen, bei denen immer jemand zuerst dran ist. Emotionale Unabhängigkeit, eigene Worte, eigener Platz.</p>
+        <div class="room-meta">
+          <b>Challenge: RISE</b>
+          <span>4 × 30 Tage</span>
+          <span>Komm an / Nimm an / Lass los / Bleiben</span>
+        </div>
+      </div>
+
+      <div class="room r-ursprung">
+        <div class="room-id">
+          <span class="room-name">Der Ursprung</span>
+          <span class="room-brand">CNC4ELEMENT8</span>
+        </div>
+        <p class="room-for">Für Menschen, bei denen alles läuft — nur in einem fremden Takt. Rückverbindung an den eigenen Rhythmus und die eigene Natur.</p>
+        <div class="room-meta">
+          <b>Challenge: Liegende Acht</b>
+          <span>56 Tage / 8 Wochen</span>
+          <span>zwei Schleifen à vier Wochen</span>
+        </div>
+      </div>
+
+      <div class="room r-mut">
+        <div class="room-id">
+          <span class="room-name">Der Mut</span>
+          <span class="room-brand">LOONATIC</span>
+        </div>
+        <p class="room-for">Für Menschen, die längst wissen, was sie anfangen wollen — und es nicht tun, weil die Leute um sie herum es für Unsinn halten. Meistens liebevoll.</p>
+        <div class="room-meta">
+          <b>Challenge: Loonatic</b>
+          <span>33 Tage</span>
+          <span>drei Phasen à elf</span>
+        </div>
+      </div>
+
+      <div class="room r-macher">
+        <div class="room-id">
+          <span class="room-name">Der Macher</span>
+          <span class="room-brand">BLVCK TABLE / eigenes Haus</span>
+        </div>
+        <p class="room-for">Für Menschen, die längst liefern und Gegner suchen statt Motivation. Gaming, Treffen, Kickboxen — Anwesenheit statt Inhalte. Geschlossen, nicht in der Mitgliedschaft enthalten.</p>
+        <div class="room-meta">
+          <b>Challenge: PROBATIO</b>
+          <span>99 Tage</span>
+          <span>neun Blöcke à elf</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="haus">
+  <div class="wrap">
+    <div class="split">
+      <h2>Und eine Sache,<br>die alle machen.</h2>
+      <div class="split-text">
+        <p>Die vier Räume trennen. Das hier verbindet: dieselbe tägliche Übung, egal aus welchem Raum du kommst — und sie zeigt, dass das Problem selten Disziplin ist, sondern Reihenfolge.</p>
+      </div>
+    </div>
+
+    <div class="hc">
+      <div>
+        <span class="hc-tag">Im ganzen Haus gleich</span>
+        <p class="hc-name">Fünf Handlungen. Jeden Tag.</p>
+        <div class="hc-text">
+          <p>Sechs Tage die Woche, Samstag frei. Jede Handlung so klein, dass keine Ausrede trägt. Bewertet wird binär: gemacht oder nicht.</p>
+          <p>Versäumte Tage werden nicht nachgeholt. Wer nachholt, verhandelt — und das Verhandeln ist der eigentliche Gegner.</p>
+        </div>
+      </div>
+      <div class="hc-ladder">
+        <div class="hc-step"><span class="hc-num">01</span><span class="hc-what"><b>Wahrheit</b> — ein Satz, den du sonst nicht aussprichst</span></div>
+        <div class="hc-step"><span class="hc-num">02</span><span class="hc-what"><b>Tat</b> — eine Sache, die dich dem Ziel näher bringt</span></div>
+        <div class="hc-step"><span class="hc-num">03</span><span class="hc-what"><b>Körper</b> — irgendetwas, das anstrengt</span></div>
+        <div class="hc-step"><span class="hc-num">04</span><span class="hc-what"><b>Stille</b> — ohne Ton, ohne Bildschirm</span></div>
+        <div class="hc-step"><span class="hc-num">05</span><span class="hc-what"><b>Mensch</b> — jemand, der von dir hört</span></div>
+      </div>
+    </div>
+
+    <div class="haus-list">
+      <div class="haus-item">
+        <span class="haus-tag">Enthalten</span>
+        <h3>Die Community</h3>
+        <p>Der Ort, an dem die Räume liegen. Kein Newsfeed, kein Punktesystem — Menschen am selben Punkt und ein Rhythmus aus Treffen und Live-Terminen.</p>
+      </div>
+      <div class="haus-item">
+        <span class="haus-tag">Enthalten</span>
+        <h3>Die Academy</h3>
+        <p>Videos und das Archiv des Baus: was beim Aufbau eigener Marken tatsächlich passiert — Shop, Technik, Rechtstexte, erste Kunden, samt dem, was schiefgeht.</p>
+      </div>
+      <div class="haus-item">
+        <span class="haus-tag out">Daneben</span>
+        <h3>BLVCK TABLE</h3>
+        <p>Eigenes Haus, eigener Zugang, eigener Preis. Ein geschlossener Zirkel lässt sich nicht per Monatsmitgliedschaft betreten, ohne das zu verlieren, wofür er existiert.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="innen">
+  <div class="wrap">
+    <div class="split">
+      <h2>So sieht es<br>von innen aus.</h2>
+      <div class="split-text">
+        <p>Kein Kurs, den man durchklickt. Ein Ort, den man jeden Tag kurz aufmacht — <em>und der weiß, wo du stehst.</em></p>
+        <p>Die tägliche Fünf ist das Herz. Alles andere hängt daran: die Räume, die Termine, die Leute, die heute dasselbe machen wie du.</p>
+      </div>
+    </div>
+
+    <span class="vorschau-tag"><i></i>Vorschau — so wird es aussehen</span>
+
+    <div class="hub">
+      <div class="hub-pane">
+        <div class="hub-top">
+          <span class="hub-hallo">Heute</span>
+          <span class="hub-streak">Tag 12 in Folge</span>
+        </div>
+
+        <div class="heute">
+          <div class="heute-zeile ok"><span class="kasten"></span><span class="heute-was">Wahrheit</span><span class="heute-sub">07:20</span></div>
+          <div class="heute-zeile ok"><span class="kasten"></span><span class="heute-was">Körper</span><span class="heute-sub">08:05</span></div>
+          <div class="heute-zeile ok"><span class="kasten"></span><span class="heute-was">Tat</span><span class="heute-sub">11:40</span></div>
+          <div class="heute-zeile"><span class="kasten"></span><span class="heute-was">Stille</span><span class="heute-sub">offen</span></div>
+          <div class="heute-zeile"><span class="kasten"></span><span class="heute-was">Mensch</span><span class="heute-sub">offen</span></div>
+        </div>
+
+        <p class="hub-note">Gemacht oder nicht — mehr gibt es nicht einzutragen. Kein Punktestand, keine Bewertung, keine Nachholliste.</p>
+      </div>
+
+      <div class="hub-pane">
+        <div class="hub-raeume">
+          <div class="hub-raum" style="--hc2:var(--stimme)"><span>Die Stimme</span><b>RISE</b><i>Block 2 von 4</i></div>
+          <div class="hub-raum" style="--hc2:var(--ursprung)"><span>Der Ursprung</span><b>Liegende Acht</b><i>startet in 9 Tagen</i></div>
+          <div class="hub-raum" style="--hc2:var(--mut)"><span>Der Mut</span><b>Loonatic</b><i>Tag 12 von 33</i></div>
+          <div class="hub-raum" style="--hc2:var(--macher)"><span>Der Macher</span><b>BLVCK TABLE</b><i>eigener Zugang</i></div>
+        </div>
+
+        <div class="hub-termin">
+          <span>Als Nächstes</span>
+          <b>Live: Die Reihenfolge</b>
+          <i class="wl-klein">Donnerstag, 20:00 — offen für alle Räume</i>
+        </div>
+
+        <div class="hub-termin">
+          <span>Deine Challenge</span>
+          <b>Loonatic — Tag 12 von 33</b>
+          <span class="hub-balken"><i></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="liste">
+  <div class="wrap">
+    <div class="split">
+      <h2>Das größte Projekt<br>deines Lebens bist du.</h2>
+      <div class="split-text">
+        <p>Finde heraus, was dich außergewöhnlich gewöhnlich macht.</p>
+        <p><em>Trag dich auf die Warteliste ein.</em></p>
+      </div>
+    </div>
+
+    <div class="wl">
+      <div>
+        <p class="wl-h">Trag dich ein.<br>Kostet nichts.</p>
+        <div class="wl-text">
+          <p>Du bekommst eine Nachricht, wenn es losgeht, und ab und zu eine darüber, woran ich gerade baue. Keine Verkaufsstrecken, kein Dauerfeuer.</p>
+        </div>
+      </div>
+
+      <div>
+        <form class="wl-form" id="wlForm" method="post" action="__WARTELISTE_ENDPUNKT__" novalidate>
+          <input type="email" id="wlMail" name="email" autocomplete="email" required placeholder="deine@mail.de" aria-label="Deine E-Mail-Adresse">
+          <label class="wl-ok">
+            <input type="checkbox" id="wlOk" name="einwilligung" required>
+            <span>Ja, ich möchte den Newsletter von Dennis Goldhammer erhalten. Ab und zu eine Nachricht darüber, woran er gerade arbeitet — und wenn eine der Communitys öffnet, erfahre ich es hier zuerst. Abmelden jederzeit über den Link in jeder Mail.</span>
+          </label>
+          <button class="wl-btn" type="submit" id="wlBtn">Auf die Liste</button>
+          <p class="wl-klein">Verantwortlich ist die HIGHERPlan GmbH. Was mit der Adresse passiert, steht in der <a href="#" style="color:var(--ink-soft)">Datenschutzerklärung</a>.</p>
+        </form>
+        <div class="wl-danke" id="wlDanke" hidden>
+          <em>Vorschau</em>
+          <b>So sähe die Bestätigung aus.</b>
+          <span>In der gebauten Fassung geht hier eine Mail mit Bestätigungslink raus — eingetragen bist du erst, wenn du den geklickt hast. Im Artefakt ist nichts verschickt und nichts gespeichert.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="nichtfuer">
+  <div class="wrap split">
+    <h2>Für wen das<br>nichts ist.</h2>
+    <div>
+      <p class="lead">Lieber jetzt als in drei Wochen.</p>
+      <div class="nots">
+        <div class="not"><b>01</b><p>Für jemanden, der eine Diagnose sucht. Das Quiz sagt dir nicht, wer du bist. Es sagt, wo es gerade klemmt — und das ändert sich.</p></div>
+        <div class="not"><b>02</b><p>Für jemanden, der gerettet werden will. Ich rette niemanden. Ich zeige dir, was du kannst.</p></div>
+        <div class="not"><b>03</b><p>Für jemanden, der nichts tun will. Alles hier setzt voraus, dass du zwischen zwei Terminen etwas machst.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="wer">
+  <div class="wrap split">
+    <h2>Wer das<br>macht.</h2>
+    <div>
+      <p class="wer-name">Dennis Goldhammer</p>
+      <p class="wer-role">Ehemann / Vater / Sohn / Mensch</p>
+      <div class="wer-text">
+        <p>Ein gewöhnlicher Typ aus Berlin, der seine Vision wahr werden lässt. Ich baue gerade selbst — Marken, Shops, Software, mit allem, was dabei danebengeht. Der übertragbare Teil davon liegt hier drin.</p>
+        <p>Über sechs Jahre mit Menschen aus der ganzen Welt gearbeitet. Mit einigen von ihnen arbeite ich heute zusammen — man kann sie fragen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <footer>
+    <span>OPM / One Project Me</span>
+    <span>HIGHERPlan GmbH</span>
+    <span>Impressum</span>
+    <span>Datenschutz</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var QS = [
+    { t:"Sonntagabend. Morgen fängt die Woche an.",
+      o:[{k:"A",t:"Mein Tag läuft. Ich weiß nur nicht mehr, wofür.",a:"ursprung"},
+         {k:"B",t:"Mein Tag läuft nach den anderen. Was übrig bleibt, ist meins.",a:"stimme"}] },
+
+    { t:"Du hast eine Idee, die seit Monaten nicht weggeht.",
+      o:[{k:"A",t:"Ich rede darüber. Angefangen habe ich noch nicht.",a:"mut"},
+         {k:"B",t:"Ich habe angefangen. Mir fehlen Leute, die mitziehen.",a:"macher"}] },
+
+    { t:"Was hält dich mehr auf?",
+      o:[{k:"A",t:"Dass ich nicht sagen kann, was ich will, ohne jemanden zu enttäuschen.",a:"stimme"},
+         {k:"B",t:"Dass ich genau weiß, was ich will — und es trotzdem nicht anfange.",a:"mut"}] },
+
+    { t:"Eine ganze Woche ohne einen einzigen Termin. Was passiert?",
+      o:[{k:"A",t:"Ich merke zum ersten Mal seit Langem, wie mein eigener Takt geht.",a:"ursprung"},
+         {k:"B",t:"Ich baue durch. Leerlauf macht mich unruhig.",a:"macher"}] },
+
+    { t:"Jemand fragt dich, wie es dir geht. Jemand, der es ernst meint.",
+      o:[{k:"A",t:"Ich sage: gut. Und merke beim Sagen, dass ich es nicht weiß.",a:"stimme"},
+         {k:"B",t:"Ich erzähle, woran ich arbeite. Ehrlich, aber nicht die Antwort auf die Frage.",a:"macher"}] },
+
+    { t:"Du liest den Satz: Es könnte auch anders gehen.",
+      o:[{k:"A",t:"Ja. Langsamer.",a:"ursprung"},
+         {k:"B",t:"Ja. Endlich.",a:"mut"}] },
+
+    { t:"Wer nimmt dir gerade deinen Platz weg?",
+      o:[{k:"A",t:"Menschen. Es ist immer jemand zuerst dran.",a:"stimme"},
+         {k:"B",t:"Kein Mensch. Es ist das Tempo selbst.",a:"ursprung"}] },
+
+    { t:"Stell dir vor, es klappt. Was hast du dann?",
+      o:[{k:"A",t:"Etwas Eigenes. Auch wenn es klein ist.",a:"mut"},
+         {k:"B",t:"Zahlen, die stimmen. Und Leute auf Augenhöhe.",a:"macher"}] },
+
+    { t:"Was bist du bereit herzugeben?",
+      w:1.5,
+      o:[{k:"A",t:"Das gute Gefühl, für alle da zu sein.",a:"stimme"},
+         {k:"B",t:"Das Tempo, an das ich mich gewöhnt habe.",a:"ursprung"},
+         {k:"C",t:"Die Sicherheit, nichts falsch machen zu können.",a:"mut"},
+         {k:"D",t:"Die Ausrede, dass ich allein schneller bin.",a:"macher"}] }
+  ];
+
+  var W = {
+    stimme:{
+      name:"Die Stimme", world:"AMFEEL / Challenge RISE", color:"var(--stimme)",
+      desc:"Du funktionierst. Für alle, zuverlässig, seit Jahren. Und wenn dich jemand fragt, was du selbst willst, brauchst du zu lange für die Antwort — nicht weil du es nicht weißt, sondern weil lange niemand gefragt hat.",
+      price:"Der Preis: Du wirst Menschen enttäuschen, die sich daran gewöhnt haben, dass du das nie tust.",
+      note:"<b>Eigener Eingang, dasselbe Haus.</b> AMFEEL hat eine eigene Marke, ein eigenes Buch und eine eigene Adresse — amfeel.life. Der Raum ist in der Mitgliedschaft enthalten, RISE buchst du dazu: vier Blöcke à 30 Tage, einzeln oder am Stück.",
+      cta:"Zur Warteliste"
+    },
+    ursprung:{
+      name:"Der Ursprung", world:"CNC4ELEMENT8 / Challenge Liegende Acht", color:"var(--ursprung)",
+      desc:"Bei dir läuft alles. Der Kalender, die Woche, das Jahr. Nur läuft es in einem Takt, den du nicht ausgesucht hast — und du merkst es immer erst, wenn ein Tag mal leer ist und dich das nervös macht.",
+      price:"Der Preis: langsamer werden, bevor du weißt, ob sich das lohnt.",
+      note:"<b>Acht Wochen, zwei Schleifen.</b> Die Liegende Acht läuft 56 Tage mit einem Kreuzungspunkt in der Mitte. Der Raum ist in der Mitgliedschaft enthalten, die Challenge buchst du dazu, wenn ein Durchgang startet.",
+      cta:"Zur Warteliste"
+    },
+    mut:{
+      name:"Der Mut", world:"LOONATIC / Challenge Loonatic", color:"var(--mut)",
+      desc:"Du weißt es. Du spürst es seit einer Weile. Du machst es nicht — weil die Leute um dich herum es für Unsinn halten, und zwar liebevoll. Genau daher kommt der Name: Loonatic ist der Vorwurf von außen, den man irgendwann selbst in die Hand nimmt.",
+      price:"Der Preis: Du wirst eine Zeit lang blöd dastehen. Vorher weiß niemand, ob du recht hattest.",
+      note:"<b>33 Tage, drei Phasen à elf.</b> Der kürzeste Weg rein und der, an dem am meisten hängt: Wer die 33 Tage durchhält, gehört danach zu einer Gruppe, die man aussprechen kann — Loonatics.",
+      cta:"Zur Warteliste"
+    },
+    macher:{
+      name:"Der Macher", world:"BLVCK TABLE / Challenge PROBATIO", color:"var(--macher)",
+      desc:"Du lieferst längst. Dir fehlt kein Antrieb und keine Idee — dir fehlen Gegner. Leute, bei denen du dich nicht erklären musst, weil sie dieselbe Woche hinter sich haben.",
+      price:"Der Preis: Am Tisch zählt nicht, was du vorhast. Nur, was letzte Woche fertig wurde.",
+      note:"<b>Eigenes Haus, eigener Zugang.</b> BLVCK TABLE ist ein geschlossener Zirkel und nicht Teil der OPM-Mitgliedschaft: Gaming, Treffen, Kickboxen — Anwesenheit statt Inhalte. Davor liegt PROBATIO, 99 Tage in neun Blöcken à elf.",
+      cta:"Zu BLVCK TABLE"
+    }
+  };
+
+  var ORDER = ["stimme","ursprung","mut","macher"];
+  var VAR = { stimme:"--stimme", ursprung:"--ursprung", mut:"--mut", macher:"--macher" };
+
+  var qText  = document.getElementById("qText"),
+      qOpts  = document.getElementById("qOpts"),
+      qCount = document.getElementById("qCount"),
+      qBars  = document.getElementById("qBars"),
+      qBack  = document.getElementById("qBack"),
+      res    = document.getElementById("res");
+
+  var picks = [];
+  var losOrder = null;   // einmal pro Durchlauf gezogen, löst Gleichstand auf
+
+  QS.forEach(function(){
+    var b = document.createElement("div");
+    b.className = "q-bar";
+    qBars.appendChild(b);
+  });
+  var bars = qBars.children;
+
+  function pad(n){ return (n < 10 ? "0" : "") + n; }
+
+  function mischen(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function render(){
+    var i = picks.length;
+    if (i >= QS.length) { finish(); return; }
+
+    var q = QS[i];
+    qText.textContent = q.t;
+    qCount.textContent = "Frage " + pad(i + 1) + " von " + pad(QS.length);
+    qBack.hidden = (i === 0);
+
+    for (var b = 0; b < bars.length; b++){
+      bars[b].className = "q-bar" + (b < i ? " done" : (b === i ? " now" : ""));
+    }
+
+    qOpts.innerHTML = "";
+    q.o.forEach(function(opt){
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "opt";
+      var k = document.createElement("span");
+      k.className = "opt-k";
+      k.textContent = opt.k;
+      var t = document.createElement("span");
+      t.textContent = opt.t;
+      btn.appendChild(k);
+      btn.appendChild(t);
+      btn.addEventListener("click", function(){
+        picks.push({ a: opt.a, w: q.w || 1 });
+        render();
+      });
+      qOpts.appendChild(btn);
+    });
+  }
+
+  qBack.addEventListener("click", function(){
+    if (picks.length){ picks.pop(); render(); }
+  });
+
+  function finish(){
+    var score = { stimme:0, ursprung:0, mut:0, macher:0 };
+    picks.forEach(function(p){ score[p.a] += p.w; });
+
+    var total = 0;
+    ORDER.forEach(function(k){ total += score[k]; });
+
+    // Gleichstand: nicht die Reihenfolge im Code entscheiden lassen
+    if (!losOrder) losOrder = mischen(ORDER);
+    var hoch = Math.max(score.stimme, score.ursprung, score.mut, score.macher);
+    var spitze = ORDER.filter(function(k){ return score[k] === hoch; });
+    var top = losOrder.filter(function(k){ return score[k] === hoch; })[0];
+    var gleichstand = spitze.length > 1;
+
+    var w = W[top];
+
+    res.style.setProperty("--wc", w.color);
+    document.getElementById("resKicker").textContent = gleichstand
+      ? "Zwei Räume liegen bei dir gleichauf"
+      : "Das hier scheint gerade deins zu sein";
+    document.getElementById("resName").textContent  = w.name;
+    document.getElementById("resWorld").textContent = w.world;
+    document.getElementById("resDesc").textContent  = w.desc;
+    document.getElementById("resPrice").textContent = w.price;
+    document.getElementById("resNote").innerHTML    = w.note;
+    document.getElementById("resBtn").textContent   = w.cta;
+
+    var rows = document.getElementById("mixRows");
+    rows.innerHTML = "";
+
+    var sorted = ORDER.slice().sort(function(a,b){
+      if (score[b] !== score[a]) return score[b] - score[a];
+      return losOrder.indexOf(a) - losOrder.indexOf(b);
+    });
+
+    sorted.forEach(function(k){
+      var pct = total ? Math.round(score[k] / total * 100) : 0;
+      var row = document.createElement("div");
+      row.className = "mix-row" + (score[k] === hoch ? " lead" : "");
+      row.style.setProperty("--mc", "var(" + VAR[k] + ")");
+      row.innerHTML =
+        '<span class="mix-label">' + W[k].name + '</span>' +
+        '<span class="mix-val">' + pct + '%</span>' +
+        '<span class="mix-track"><span class="mix-fill"></span></span>';
+      rows.appendChild(row);
+      var fill = row.querySelector(".mix-fill");
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){ fill.style.width = pct + "%"; });
+      });
+    });
+
+    var second = sorted[1];
+    var gap = total ? Math.round((score[top] - score[second]) / total * 100) : 0;
+    var foot;
+    if (gleichstand){
+      var namen = spitze.map(function(k){ return W[k].name; }).join(" und ");
+      foot = namen + " stehen bei dir exakt gleich. Das ist kein Fehler im Test — "
+           + "es heißt, dass gerade beides zutrifft. Fang mit dem an, dessen Sprache dir lieber ist.";
+    } else if (gap <= 12){
+      foot = "Zwischen " + W[top].name + " und " + W[second].name + " liegen nur " + gap
+           + " Prozentpunkte. Beide Räume passen gerade — fang mit dem an, dessen Sprache dir lieber ist.";
+    } else {
+      foot = W[second].name + " liegt dahinter und wird irgendwann dran sein. "
+           + "Zugang hast du ohnehin zu allem, was im Haus liegt.";
+    }
+    document.getElementById("mixFoot").textContent = foot;
+
+    res.hidden = false;
+    res.scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+
+  document.getElementById("resAgain").addEventListener("click", function(){
+    picks = [];
+    losOrder = null;
+    res.hidden = true;
+    render();
+    document.getElementById("quiz").scrollIntoView({ behavior:"smooth", block:"start" });
+  });
+
+
+  var wlForm = document.getElementById("wlForm");
+  if (wlForm){
+    wlForm.addEventListener("submit", function(e){
+      e.preventDefault();
+      var mail = document.getElementById("wlMail"),
+          ok   = document.getElementById("wlOk");
+      if (!mail.value || mail.value.indexOf("@") < 1){ mail.focus(); return; }
+      if (!ok.checked){ ok.focus(); return; }
+      wlForm.hidden = true;
+      document.getElementById("wlDanke").hidden = false;
+    });
+  }
+
+  render();
+})();
+</script>
+
 </body>
 </html>
