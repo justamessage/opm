@@ -167,8 +167,15 @@ test('Datenschutz: Netlify vollständig wie auf dennisgoldhammer.me, nichts, was
   assert.match(t, /keine Cookies, hat kein Formular und bindet keine Analyse-/);
   assert.match(t, /Der Test läuft vollständig in deinem Browser/);
   assert.doesNotMatch(t, /führt kein Skript aus/, 'das waere jetzt falsch');
-  assert.doesNotMatch(LIVE, /<form\b|document\.cookie|<a [^>]*href="https?:/i, 'kein Formular, kein Cookie, kein externer Link');
+  assert.doesNotMatch(LIVE, /<form\b|document\.cookie/i, 'kein Formular, kein Cookie');
   assert.doesNotMatch(LIVE, /@font-face/, 'keine nachgeladene Schrift');
+  // Ein Verweis nach aussen laedt nichts - die Zusage der Erklaerung ("keine
+  // Inhalte von fremden Servern nachgeladen") bleibt davon unberuehrt. Erlaubt
+  // ist deshalb genau eine Adresse: dennisgoldhammer.me, dieselbe Betreiberin,
+  // dasselbe Impressum (DG 20.09.2026). Jede andere bricht den Bau-Test.
+  const fremd = [...LIVE.matchAll(/<a [^>]*href="(https?:\/\/[^"]+)"/gi)].map((m) => m[1]);
+  assert.deepEqual(fremd, ['https://dennisgoldhammer.me'], `fremde Verweise: ${fremd.join(', ')}`);
+  assert.match(LIVE, /<a class="wer-link" href="https:\/\/dennisgoldhammer\.me" rel="noopener">/, 'rel="noopener" gehoert dran');
 });
 
 test('Fußlinks: Startseite und Rechtsseiten zeigen auf /impressum und /datenschutz, beide ausgeliefert', () => {

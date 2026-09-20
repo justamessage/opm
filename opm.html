@@ -326,7 +326,7 @@ h1{font-size:clamp(42px,9.2vw,96px)}
 .hc-what b{color:var(--ink);font-weight:400;font-family:var(--fd);font-size:14px}
 
 .haus-list{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:36px}
-@media(min-width:780px){.haus-list{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:780px){.haus-list{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}}
 .haus-item{background:var(--ground-2);padding:26px 24px;display:flex;flex-direction:column;gap:9px}
 .haus-item h3{font-size:19px;font-weight:600;letter-spacing:-.015em}
 .haus-item p{color:var(--ink-soft);font-size:16px;line-height:1.55}
@@ -436,6 +436,8 @@ h1{font-size:clamp(42px,9.2vw,96px)}
 .wer-name{font-family:var(--fd);font-weight:800;font-size:clamp(26px,4vw,38px);letter-spacing:-.025em}
 .wer-role{font-weight:500;font-family:var(--fm);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin-top:8px}
 .wer-text{margin-top:22px;color:var(--ink-soft);max-width:50ch;display:flex;flex-direction:column;gap:16px}
+.wer-link{color:inherit;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px;opacity:.75}
+.wer-link:hover{opacity:1}
 
 footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-faint);font-family:var(--fm);font-size:11px;letter-spacing:.06em;display:flex;flex-wrap:wrap;gap:8px 26px}
 
@@ -632,9 +634,9 @@ footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-
       <div class="room r-macher">
         <div class="room-id">
           <span class="room-name">Der Macher</span>
-          <span class="room-brand">BLVCK TABLE / eigenes Haus</span>
+          <span class="room-brand">PROBATIO</span>
         </div>
-        <p class="room-for">Für Menschen, die längst liefern und Gegner suchen statt Motivation. Gaming, Treffen, Kickboxen — Anwesenheit statt Inhalte. Geschlossen, nicht in der Mitgliedschaft enthalten.</p>
+        <p class="room-for">Für Menschen, die längst liefern und Gegner suchen statt Motivation. Leute, bei denen man sich nicht erklären muss, weil sie dieselbe Woche hinter sich haben.</p>
         <div class="room-meta">
           <b>Challenge: PROBATIO</b>
           <span>99 Tage</span>
@@ -683,11 +685,6 @@ footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-
         <h3>Die Academy</h3>
         <p>Videos und das Archiv des Baus: was beim Aufbau eigener Marken tatsächlich passiert — Shop, Technik, Rechtstexte, erste Kunden, samt dem, was schiefgeht.</p>
       </div>
-      <div class="haus-item">
-        <span class="haus-tag out">Daneben</span>
-        <h3>BLVCK TABLE</h3>
-        <p>Eigenes Haus, eigener Zugang, eigener Preis. Ein geschlossener Zirkel lässt sich nicht per Monatsmitgliedschaft betreten, ohne das zu verlieren, wofür er existiert.</p>
-      </div>
     </div>
   </div>
 </section>
@@ -727,7 +724,7 @@ footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-
           <div class="hub-raum" style="--hc2:var(--stimme)"><span>Die Stimme</span><b>RISE</b><i>Block 2 von 4</i></div>
           <div class="hub-raum" style="--hc2:var(--ursprung)"><span>Der Ursprung</span><b>Liegende Acht</b><i>startet in 9 Tagen</i></div>
           <div class="hub-raum" style="--hc2:var(--mut)"><span>Der Mut</span><b>Loonatic</b><i>Tag 12 von 33</i></div>
-          <div class="hub-raum" style="--hc2:var(--macher)"><span>Der Macher</span><b>BLVCK TABLE</b><i>eigener Zugang</i></div>
+          <div class="hub-raum" style="--hc2:var(--macher)"><span>Der Macher</span><b>PROBATIO</b><i>Block 3 von 9</i></div>
         </div>
 
         <div class="hub-termin">
@@ -807,6 +804,7 @@ footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-
       <div class="wer-text">
         <p>Ein gewöhnlicher Typ aus Berlin, der seine Vision wahr werden lässt. Ich baue gerade selbst — Marken, Shops, Software, mit allem, was dabei danebengeht. Der übertragbare Teil davon liegt hier drin.</p>
         <p>Über sechs Jahre mit Menschen aus der ganzen Welt gearbeitet. Mit einigen von ihnen arbeite ich heute zusammen — man kann sie fragen.</p>
+        <p><a class="wer-link" href="https://dennisgoldhammer.me" rel="noopener">dennisgoldhammer.me&nbsp;→</a></p>
       </div>
     </div>
   </div>
@@ -889,11 +887,11 @@ footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-
       cta:"Zur Warteliste"
     },
     macher:{
-      name:"Der Macher", world:"BLVCK TABLE / Challenge PROBATIO", color:"var(--macher)",
+      name:"Der Macher", world:"PROBATIO / 99 Tage", color:"var(--macher)",
       desc:"Du lieferst längst. Dir fehlt kein Antrieb und keine Idee — dir fehlen Gegner. Leute, bei denen du dich nicht erklären musst, weil sie dieselbe Woche hinter sich haben.",
-      price:"Der Preis: Am Tisch zählt nicht, was du vorhast. Nur, was letzte Woche fertig wurde.",
-      note:"<b>Eigenes Haus, eigener Zugang.</b> BLVCK TABLE ist ein geschlossener Zirkel und nicht Teil der OPM-Mitgliedschaft: Gaming, Treffen, Kickboxen — Anwesenheit statt Inhalte. Davor liegt PROBATIO, 99 Tage in neun Blöcken à elf.",
-      cta:"Zu BLVCK TABLE"
+      price:"Der Preis: Hier zählt nicht, was du vorhast. Nur, was letzte Woche fertig wurde.",
+      note:"<b>99 Tage, neun Blöcke à elf.</b> Der längste Weg rein — und der einzige, bei dem am Ende nicht zählt, ob du durchgehalten hast, sondern was dabei entstanden ist.",
+      cta:"Zur Warteliste"
     }
   };
 
