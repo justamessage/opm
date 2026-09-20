@@ -435,9 +435,13 @@ h1{font-size:clamp(42px,9.2vw,96px)}
 #wer{border-top:1px solid var(--line-soft)}
 .wer-name{font-family:var(--fd);font-weight:800;font-size:clamp(26px,4vw,38px);letter-spacing:-.025em}
 .wer-role{font-weight:500;font-family:var(--fm);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin-top:8px}
-.wer-text{margin-top:22px;color:var(--ink-soft);max-width:50ch;display:flex;flex-direction:column;gap:16px}
-.wer-link{color:inherit;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px;opacity:.75}
-.wer-link:hover{opacity:1}
+/* Der Name ist der Verweis. Kein Unterstrich auf dieser Schriftgroesse -
+   der zoege einen Balken durch den Abschnitt; der Pfeil traegt den Hinweis
+   und rueckt beim Zeigen nach. */
+.wer-link{color:inherit;text-decoration:none;display:inline-flex;align-items:baseline;gap:.34em}
+.wer-pfeil{color:var(--haus);font-weight:600;transition:transform .18s ease;display:inline-block}
+.wer-link:hover .wer-pfeil,.wer-link:focus-visible .wer-pfeil{transform:translateX(.18em)}
+.wer-link:focus-visible{outline:2px solid var(--haus);outline-offset:6px;border-radius:2px}
 
 footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-faint);font-family:var(--fm);font-size:11px;letter-spacing:.06em;display:flex;flex-wrap:wrap;gap:8px 26px}
 
@@ -799,13 +803,8 @@ footer{border-top:1px solid var(--line-soft);padding-block:30px;color:var(--ink-
   <div class="wrap split">
     <h2>Wer das<br>macht.</h2>
     <div>
-      <p class="wer-name">Dennis Goldhammer</p>
+      <p class="wer-name"><a class="wer-link" href="https://dennisgoldhammer.me" rel="noopener">Dennis Goldhammer<span class="wer-pfeil">→</span></a></p>
       <p class="wer-role">Ehemann / Vater / Sohn / Mensch</p>
-      <div class="wer-text">
-        <p>Ein gewöhnlicher Typ aus Berlin, der seine Vision wahr werden lässt. Ich baue gerade selbst — Marken, Shops, Software, mit allem, was dabei danebengeht. Der übertragbare Teil davon liegt hier drin.</p>
-        <p>Über sechs Jahre mit Menschen aus der ganzen Welt gearbeitet. Mit einigen von ihnen arbeite ich heute zusammen — man kann sie fragen.</p>
-        <p><a class="wer-link" href="https://dennisgoldhammer.me" rel="noopener">dennisgoldhammer.me&nbsp;→</a></p>
-      </div>
     </div>
   </div>
 </section>
