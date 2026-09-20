@@ -105,11 +105,18 @@ p{margin:0}
      Kennzeile darueber (.mark); das Zeichen sitzt auf ihrer Hoehe, nicht auf
      der Schlagzeile. Alle Masse in vw, damit das Verhaeltnis von 320 bis 479
      dasselbe bleibt. Das Zeichen liegt bei 72 % der Kastenbreite, deshalb
-     steht der Kasten weiter rechts als das, was man sieht. */
-  .mark{padding-right:30vw}
+     steht der Kasten weiter rechts als das, was man sieht.
+
+     34vw/74vw statt 30vw/78vw: mit 30/78 beruehrte der Rauch die Kennzeile in
+     zwei Baendern - 407-409 und 463-473 px. Beide liegen an Stellen, wo die
+     Kennzeile eine Zeile verliert (Kopf 646->620 bzw. 621->604); die dann
+     laengste Zeile reicht bis unter das Zeichen. Zwischen den Baendern blieb
+     der Abstand einstellig. Mit 34/74 ist der kleinste gemessene Abstand
+     32 px (bei 407), und der Kopf auf 390 bleibt bei 646 px. */
+  .mark{padding-right:34vw}
   .hero-film{
     top:.5vw;bottom:auto;right:-6vw;left:auto;transform:none;
-    width:78vw;max-width:none;opacity:.95;
+    width:74vw;max-width:none;opacity:.95;
   }
 }
 @media(prefers-reduced-motion:reduce){.hero-film video{display:none}}
