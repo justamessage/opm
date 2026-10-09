@@ -4,6 +4,12 @@
 # dein Teil") ausser im Deploy-Preview weg. Siehe bau.mjs.
 [build]
   command = "node bau.mjs"
+  # Produktions-Deploys überspringen, wenn sich seit dem letzten Build nur Doku geändert hat
+  # (docs/, *.md, *.mdx) – jeder Produktions-Deploy kostet 15 Netlify-Credits. Exit 0 = überspringen.
+  # Gebaut wird immer bei: Deploy-Previews/Branch-Deploys (gratis), erneutem Build desselben Commits
+  # (Env-Änderung, „Clear cache and deploy“, API-Build) und wenn der Vergleich nicht möglich ist.
+  # Keine .md-Datei gehört zur ausgelieferten Seite (geprüft 09.10.2026); kommt so etwas dazu, hier ausnehmen.
+  ignore = "[ \"$CONTEXT\" = production ] && [ \"$CACHED_COMMIT_REF\" != \"$COMMIT_REF\" ] && git diff --quiet \"$CACHED_COMMIT_REF\" \"$COMMIT_REF\" -- . \":(exclude,glob)docs/**\" \":(exclude,glob)**/*.md\" \":(exclude,glob)**/*.mdx\""
   publish = "dist"
 
 [build.environment]
