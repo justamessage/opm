@@ -76,7 +76,8 @@ test('Fuß: kein HIGHERPlan, kein Claim, kein AGB-Link - Ansage vom 19.09.2026',
 });
 
 test('Keine fremden Ressourcen: keine Schrift, kein Bild, kein Film, kein Skript von anderen Servern', () => {
-  assert.doesNotMatch(LIVE, /<(link|script|img|iframe|video|source|track)\b[^>]*(src|href|poster)="(https?:)?\/\//i);
+  // rel="alternate" (hreflang, seit 10.10.2026) laedt der Browser nicht - ein Verweis, keine Datei.
+  assert.doesNotMatch(LIVE.replace(/<link rel="alternate"[^>]*>/g, ''), /<(link|script|img|iframe|video|source|track)\b[^>]*(src|href|poster)="(https?:)?\/\//i);
   assert.doesNotMatch(LIVE, /fonts\.googleapis|fonts\.gstatic|@import/);
   // Die Datenschutzerklaerung sagt: "Es werden keine Inhalte von fremden
   // Servern nachgeladen." Der Kopffilm liegt deshalb im eigenen dist/.
@@ -164,7 +165,8 @@ test('Datenschutz: Netlify vollständig wie auf dennisgoldhammer.me, nichts, was
   assert.doesNotMatch(t, /Warteliste|Newsletter|Checkbox|Double-Opt-In|Brevo|Sendinblue|Cloudflare|Google Workspace|YouTube/i);
   // Was sie ueber die Seite sagt, muss stimmen - und die Seite hat sich geaendert:
   // sie fuehrt jetzt ein Skript aus (der Test), hat aber weiter kein Formular.
-  assert.match(t, /keine Cookies, hat kein Formular und bindet keine Analyse-/);
+  // Seit 10.10.2026 mit Sprach-Cookie (pruefung-zweisprachig.test.mjs); "hat kein Formular" gilt weiter.
+  assert.match(t, /Sie setzt nur dann ein Cookie, wenn du selbst die Sprache umschaltest \(siehe „Sprache“\), hat kein Formular und bindet keine Analyse-/);
   assert.match(t, /Der Test läuft vollständig in deinem Browser/);
   assert.doesNotMatch(t, /führt kein Skript aus/, 'das waere jetzt falsch');
   assert.doesNotMatch(LIVE, /<form\b|document\.cookie/i, 'kein Formular, kein Cookie');
