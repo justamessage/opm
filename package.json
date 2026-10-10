@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "bau": "node bau.mjs",
-    "test": "node --test pruefung.test.mjs"
+    "test": "node --test pruefung.test.mjs pruefung-zweisprachig.test.mjs pruefung-sprache.test.mjs",
+    "englisch": "node werkzeug/englisch.mjs"
   }
 }

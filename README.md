@@ -39,3 +39,32 @@ gespeichert. Es geht nicht live: der Kasten wird ausgeschnitten, solange
 Zweck auf dieser Seite überhaupt gilt: Warteliste, Newsletter oder beide mit je
 eigener Checkbox. Das entscheidet DG, zusammen mit dem Postfach
 `opm@oneproject.me` (Stand 20.09.2026: existiert nicht, RCPT 550).
+
+## Englisch unter /en/ (Gerüst seit 10.10.2026)
+
+- `/en/` ist eine eigene Seite: `en/opm.html`, **erzeugt** aus `opm.html` und
+  der Tabelle `werkzeug/uebersetzung.json` (`npm run englisch`). Dasselbe
+  Werkzeug schreibt `docs/en-texte.md` (Deutsch | Englisch zum Gegenlesen).
+  Ändert sich `opm.html`, meldet `npm run englisch` jede Stelle, die nicht mehr
+  passt, und jeden deutschen Rest – nichts bleibt still deutsch.
+- **Fließtexte sind Entwurf.** Die deutsche Seite wird noch überarbeitet; danach
+  werden die englischen Texte neu gezogen. Oberfläche (Titel, Beschreibung,
+  Knöpfe, Fuß, Umschalter) ist fertig.
+- Der Bau setzt je Sprache ein (`bau.mjs`, `SPRACHEN`): hreflang, Umschalter
+  DE / EN (Violett auf Schwarz, kein `<nav>`), auf Englisch den Hinweis, dass
+  Impressum und Datenschutz deutsch sind. Ein Test hält das Gerüst beider
+  Sprachen gleich (Abschnitte, Klassen, Links).
+- **Spracherkennung:** `netlify/edge-functions/sprache.js`, nur auf `/`: ohne
+  Cookie, kein Bot, Browser bevorzugt nicht Deutsch → 302 auf `/en/`. Der
+  Umschalter `/sprache?zu=…` setzt `opm_lang` (1 Jahr), danach gilt nur das
+  Cookie. Prüfen nur über den Deploy-Permalink.
+- Muster und Begründungen: `HIGHERPlan/dennisgoldhammer`, `docs/zweisprachig-muster.md`.
+
+### Für später: die Warteliste
+
+Geht die OPM-Warteliste auf, läuft sie über **hp-anmeldung** (Mandant `opm`)
+mit dem Feld `sprache` (`de`/`en`): das Formular auf `/en/` schickt
+`sprache=en`, der Mandant bekommt `sprachen.en` mit eigenem englischen
+Einwilligungstext und eigener Version. So wird sichtbar, wie viele englische
+Interessenten es gibt (Brevo-Attribut `SPRACHE`). Formular und Erklärung gehen
+in beiden Sprachen gemeinsam live – der Bau bricht sonst ab.
